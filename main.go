@@ -49,8 +49,8 @@ func chartHandler(c http.ResponseWriter, r *http.Request) {
 		Name: "Temperature",
 		Style: chart.Style{
 			Show:        true,
-			StrokeColor: chart.ColorBlack,
-			FillColor:   chart.ColorRed,
+			StrokeColor: chart.GetDefaultColor(0).WithAlpha(64),
+			FillColor:   chart.GetDefaultColor(0).WithAlpha(64),
 		},
 	}
 
@@ -73,7 +73,11 @@ func chartHandler(c http.ResponseWriter, r *http.Request) {
 		// Append the time and temperature values to the chart data
 		temperatureSeries.XValues = append(temperatureSeries.XValues, t)
 		temperatureSeries.YValues = append(temperatureSeries.YValues, temp)
+
 	}
+
+	log.Printf("Following time values will be added : %v", temperatureSeries.XValues)
+	log.Printf("With following temperature values : %v", temperatureSeries.YValues)
 
 	// Create the chart with the series
 	graph := chart.Chart{
@@ -107,6 +111,7 @@ func chartHandler(c http.ResponseWriter, r *http.Request) {
 
 	// Render the chart as a PNG image
 	buf := bytes.NewBuffer([]byte{})
+	// Setup size of chart
 	graph.Width = 512
 	graph.Height = 512
 	err = graph.Render(chart.PNG, buf)
@@ -121,6 +126,7 @@ func chartHandler(c http.ResponseWriter, r *http.Request) {
 	c.Header().Set("Content-Length", strconv.Itoa(buf.Len()))
 	_, err = c.Write(buf.Bytes())
 	if err != nil {
+		log.Printf("Error writing chart to response: %v", err)
 		http.Error(c, "Error writing chart to response: "+err.Error(), http.StatusInternalServerError)
 		return
 	}

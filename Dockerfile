@@ -36,4 +36,4 @@ RUN service mysql start && \
     mysql -uroot -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE < create_table.sql
 
 # Run the MySQL server and the compiled Go binary when the container starts
-CMD service mysql start && ./main 2> log.txt
+CMD service mysql start && ./main 2>&1
