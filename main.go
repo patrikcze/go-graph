@@ -59,6 +59,7 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 	}
 	hum, err := strconv.ParseFloat(humStr, 64)
 	if err != nil {
+		log.Printf("Error parsing humidity value : %v", err)
 		http.Error(w, "Error parsing humidity value: "+err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -97,7 +98,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 	temperatures := make([]opts.LineData, 0)
 	humidities := make([]opts.LineData, 0)
 	preasures := make([]opts.LineData, 0)
-	var times = []time.Time{}
+	var times []time.Time
 	// Connect to the database
 	db, err := sql.Open("mysql", DB_USER+":"+DB_PASSWORD+"@/"+DB_NAME+"?parseTime=true")
 	if err != nil {
@@ -107,7 +108,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 	defer db.Close()
 
 	// Query the data from the database
-	rows, err := db.Query("SELECT time, temperature, humidity, preasure FROM data")
+	rows, err := db.Query("SELECT time, temperature, humidity, pressure FROM data")
 	if err != nil {
 		http.Error(w, "Error querying data: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -116,6 +117,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 
 	// Iterate through the data and add points to the series
 	for rows.Next() {
+		// Create slice with times
 		var t time.Time
 		var temp float64
 		var hum float64
@@ -157,7 +159,11 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 	)
 
 	// Put data into instance
-	line.SetXAxis(times).
+	line.SetXAxis(opts.XAxis{
+		AxisLabel: &opts.AxisLabel{
+			Rotate: 90,
+		},
+	}).
 		AddSeries("Teploty", temperatures).
 		AddSeries("Vlhkosti", humidities).
 		AddSeries("Tlaky", preasures).

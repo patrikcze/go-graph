@@ -3,10 +3,10 @@ CREATE TABLE data (
     time DATETIME NOT NULL,
     temperature FLOAT NOT NULL,
     humidity FLOAT NOT NULL,
-    preasure FLOAT NOT NULL
+    pressure FLOAT NOT NULL
 );
 
-INSERT INTO data (time, temperature, humidity, preasure) VALUES
+INSERT INTO data (time, temperature, humidity, pressure) VALUES
     ('2022-01-01 00:00:00', 20, 78, 1023),
     ('2022-01-01 01:00:00', 21, 75, 1023),
     ('2022-01-01 02:00:00', 22, 34, 1025),
