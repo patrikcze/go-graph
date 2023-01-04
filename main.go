@@ -109,8 +109,8 @@ func chartHandler(c http.ResponseWriter, r *http.Request) {
 	// Render the chart as a PNG image
 	buf := bytes.NewBuffer([]byte{})
 	// Setup size of chart
-	graph.Width = 800
-	graph.Height = 600
+	graph.Width = 512
+	graph.Height = 512
 	err = graph.Render(chart.PNG, buf)
 	if err != nil {
 		log.Printf("Error rendering chart: %v", err)
