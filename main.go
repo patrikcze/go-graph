@@ -149,7 +149,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 		charts.WithInitializationOpts(opts.Initialization{Theme: types.ThemeWesteros}),
 		charts.WithTitleOpts(opts.Title{
 			Title:    "Graf teplot",
-			Subtitle: "Čárový graf teplot vykreslený.",
+			Subtitle: "Pokusí se vykreslit data z databáze. Teploty, Vlhkosti a tlaky.",
 		}),
 		charts.WithLegendOpts(opts.Legend{
 			Show:    true,
@@ -159,11 +159,12 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 	)
 
 	// Put data into instance
-	line.SetXAxis(opts.XAxis{
-		AxisLabel: &opts.AxisLabel{
-			Rotate: 90,
-		},
-	}).
+	line.SetXAxis(times).
+		SetXAxis(opts.XAxis{
+			AxisLabel: &opts.AxisLabel{
+				Rotate: 90,
+			},
+		}).
 		AddSeries("Teploty", temperatures).
 		AddSeries("Vlhkosti", humidities).
 		AddSeries("Tlaky", preasures).
