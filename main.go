@@ -97,7 +97,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 	// Reset Items
 	temperatures := make([]opts.LineData, 0)
 	humidities := make([]opts.LineData, 0)
-	preasures := make([]opts.LineData, 0)
+	pressures := make([]opts.LineData, 0)
 	var times []time.Time
 	// Connect to the database
 	db, err := sql.Open("mysql", DB_USER+":"+DB_PASSWORD+"@/"+DB_NAME+"?parseTime=true")
@@ -138,7 +138,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 		times = append(times, t)
 		temperatures = append(temperatures, opts.LineData{Value: temp})
 		humidities = append(humidities, opts.LineData{Value: hum})
-		preasures = append(preasures, opts.LineData{Value: pres})
+		pressures = append(pressures, opts.LineData{Value: pres})
 
 	}
 
@@ -146,33 +146,41 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 	line := charts.NewLine()
 	// set some global options like Title/Legend/ToolTip or anything else
 	line.SetGlobalOptions(
-		charts.WithInitializationOpts(opts.Initialization{Theme: types.ThemeWesteros}),
+		charts.WithInitializationOpts(opts.Initialization{
+			Theme:     types.ThemeWesteros,
+			PageTitle: "Grafík",
+		}),
 		charts.WithTitleOpts(opts.Title{
-			Title:    "Graf teplot",
+			Title:    "Graf Teplot (ESP32 & BME280)",
 			Subtitle: "Pokusí se vykreslit data z databáze. Teploty, Vlhkosti a tlaky.",
 		}),
 		charts.WithLegendOpts(opts.Legend{
-			Show:    true,
-			Bottom:  "20",
-			Padding: 5,
+			Show:   true,
+			Bottom: "0",
+		}),
+		charts.WithXAxisOpts(opts.XAxis{
+			Name: "Datum a čas",
+			Type: "time",
+			AxisLabel: &opts.AxisLabel{
+				Rotate: 90,
+				Formatter: function(value, index){
+					// Formatted to be month/day; display year only in the first label
+					var date = new Date(value);
+					var texts = [(date.getMonth() + 1), date.getDate()];
+					if (idx === 0) {
+						texts.unshift(date.getYear());
+					}
+					return texts.join('/');
+				 },
+			},
 		}),
 	)
 
-	line.DataZoom = []opts.DataZoom{
-		{
-			Type:       "inside",
-			Start:      0,
-			End:        100,
-			XAxisIndex: []int{0},
-			YAxisIndex: []int{0},
-		},
-	}
-
 	// Put data into instance
 	line.SetXAxis(times).
-		AddSeries("Teploty", temperatures).
-		AddSeries("Vlhkosti", humidities).
-		AddSeries("Tlaky", preasures).
+		AddSeries("Teploty (℃)", temperatures).
+		AddSeries("Vlhkosti (%)", humidities).
+		AddSeries("Tlaky (hPa)", pressures).
 		SetSeriesOptions(charts.WithLineChartOpts(opts.LineChart{Smooth: true}))
 	line.Render(w)
 
