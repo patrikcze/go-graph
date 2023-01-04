@@ -158,13 +158,18 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 		}),
 	)
 
+	line.DataZoom = []opts.DataZoom{
+		{
+			Type:       "inside",
+			Start:      0,
+			End:        100,
+			XAxisIndex: []int{0},
+			YAxisIndex: []int{0},
+		},
+	}
+
 	// Put data into instance
 	line.SetXAxis(times).
-		SetXAxis(opts.XAxis{
-			AxisLabel: &opts.AxisLabel{
-				Rotate: 90,
-			},
-		}).
 		AddSeries("Teploty", temperatures).
 		AddSeries("Vlhkosti", humidities).
 		AddSeries("Tlaky", preasures).
