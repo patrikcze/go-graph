@@ -75,7 +75,7 @@ func chartHandler(c http.ResponseWriter, r *http.Request) {
 		temperatureSeries.YValues = append(temperatureSeries.YValues, temp)
 
 	}
-
+	// Log what has been added to the series
 	log.Printf("Following time values will be added : %v", temperatureSeries.XValues)
 	log.Printf("With following temperature values : %v", temperatureSeries.YValues)
 
@@ -83,10 +83,7 @@ func chartHandler(c http.ResponseWriter, r *http.Request) {
 	graph := chart.Chart{
 		XAxis: chart.XAxis{
 			Style: chart.Style{
-				Show:        true,
-				StrokeColor: chart.ColorBlack,
-				FillColor:   chart.ColorBlack,
-				FontColor:   chart.ColorBlack,
+				Show: true,
 			},
 			ValueFormatter: func(v interface{}) string {
 				if t, ok := v.(time.Time); ok {
@@ -112,8 +109,8 @@ func chartHandler(c http.ResponseWriter, r *http.Request) {
 	// Render the chart as a PNG image
 	buf := bytes.NewBuffer([]byte{})
 	// Setup size of chart
-	graph.Width = 512
-	graph.Height = 512
+	graph.Width = 800
+	graph.Height = 600
 	err = graph.Render(chart.PNG, buf)
 	if err != nil {
 		log.Printf("Error rendering chart: %v", err)
