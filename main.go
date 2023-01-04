@@ -31,6 +31,8 @@ func main() {
 func httpserver(w http.ResponseWriter, _ *http.Request) {
 	// Reset Items
 	temperatures := make([]opts.LineData, 0)
+	humidities := make([]opts.LineData, 0)
+	preasures := make([]opts.LineData, 0)
 	var times = []time.Time{}
 	// Connect to the database
 	db, err := sql.Open("mysql", DB_USER+":"+DB_PASSWORD+"@/"+DB_NAME+"?parseTime=true")
@@ -41,7 +43,7 @@ func httpserver(w http.ResponseWriter, _ *http.Request) {
 	defer db.Close()
 
 	// Query the data from the database
-	rows, err := db.Query("SELECT time, temperature FROM data")
+	rows, err := db.Query("SELECT time, temperature, humidity, preasure FROM data")
 	if err != nil {
 		http.Error(w, "Error querying data: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -52,7 +54,9 @@ func httpserver(w http.ResponseWriter, _ *http.Request) {
 	for rows.Next() {
 		var t time.Time
 		var temp float64
-		err := rows.Scan(&t, &temp)
+		var hum float64
+		var pres float64
+		err := rows.Scan(&t, &temp, &hum, &pres)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -67,6 +71,8 @@ func httpserver(w http.ResponseWriter, _ *http.Request) {
 		// Append the time and temperature values to the chart data
 		times = append(times, t)
 		temperatures = append(temperatures, opts.LineData{Value: temp})
+		humidities = append(humidities, opts.LineData{Value: hum})
+		preasures = append(preasures, opts.LineData{Value: pres})
 
 	}
 
@@ -83,6 +89,8 @@ func httpserver(w http.ResponseWriter, _ *http.Request) {
 	// Put data into instance
 	line.SetXAxis(times).
 		AddSeries("Teploty", temperatures).
+		AddSeries("Vlhkosti", humidities).
+		AddSeries("Tlaky", preasures).
 		SetSeriesOptions(charts.WithLineChartOpts(opts.LineChart{Smooth: true}))
 	line.Render(w)
 
