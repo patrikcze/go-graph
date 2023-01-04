@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -24,11 +25,74 @@ func main() {
 	r.HandleFunc("/graph", chartHandler)
 	http.ListenAndServe(":8080", r)
 	*/
-	http.HandleFunc("/", httpserver)
+	http.HandleFunc("/", renderGraph)
+	http.HandleFunc("/writedata", writeData)
 	http.ListenAndServe(":8080", nil)
 }
 
-func httpserver(w http.ResponseWriter, _ *http.Request) {
+func writeData(w http.ResponseWriter, r *http.Request) {
+	// Parse the form data
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, "Error parsing form data: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Get the form values
+	timeStr := r.FormValue("time")
+	tempStr := r.FormValue("temperature")
+	humStr := r.FormValue("humidity")
+	presStr := r.FormValue("pressure")
+
+	// Convert the form values to the appropriate types
+	t, err := time.Parse("2006-01-02 15:04:05", timeStr)
+	if err != nil {
+		log.Printf("Error parsing time value : %v", err)
+		http.Error(w, "Error parsing time value: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+	temp, err := strconv.ParseFloat(tempStr, 64)
+	if err != nil {
+		log.Printf("Error parsing temperature value : %v", err)
+		http.Error(w, "Error parsing temperature value: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+	hum, err := strconv.ParseFloat(humStr, 64)
+	if err != nil {
+		http.Error(w, "Error parsing humidity value: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+	pres, err := strconv.ParseFloat(presStr, 64)
+	if err != nil {
+		log.Printf("Error parsing preassure value : %v", err)
+		http.Error(w, "Error parsing pressure value: "+err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Connect to the database
+	db, err := sql.Open("mysql", DB_USER+":"+DB_PASSWORD+"@/"+DB_NAME+"?parseTime=true")
+	if err != nil {
+		log.Printf("There was problem with connection to databsae : %v", err)
+		http.Error(w, "Error connecting to database: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer db.Close()
+
+	// Execute the INSERT statement
+	_, err = db.Exec("INSERT INTO data (time, temperature, humidity, pressure) VALUES (?, ?, ?, ?)", t, temp, hum, pres)
+	if err != nil {
+		log.Printf("Error writing data to database : %v", err)
+		http.Error(w, "Error writing data to database: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Return a success response
+	w.WriteHeader(http.StatusOK)
+	log.Println("Data wuccessfully written to database.")
+	w.Write([]byte("Data written to database successfully"))
+}
+
+func renderGraph(w http.ResponseWriter, _ *http.Request) {
 	// Reset Items
 	temperatures := make([]opts.LineData, 0)
 	humidities := make([]opts.LineData, 0)
