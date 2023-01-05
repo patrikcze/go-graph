@@ -172,7 +172,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 				Inside:        false,
 				Rotate:        90,
 				Margin:        0,
-				Formatter:     "",
+				Formatter:     "{MM}-{DD}",
 				ShowMinLabel:  false,
 				ShowMaxLabel:  false,
 				Color:         "",
