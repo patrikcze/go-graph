@@ -160,7 +160,6 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 		}),
 		charts.WithXAxisOpts(opts.XAxis{
 			Name: "Datum a čas",
-			Type: "time",
 			AxisLabel: &opts.AxisLabel{
 				Rotate: 90,
 			},
