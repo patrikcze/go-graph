@@ -163,15 +163,6 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			Type: "time",
 			AxisLabel: &opts.AxisLabel{
 				Rotate: 90,
-				Formatter: function(value, index){
-					// Formatted to be month/day; display year only in the first label
-					var date = new Date(value);
-					var texts = [(date.getMonth() + 1), date.getDate()];
-					if (idx === 0) {
-						texts.unshift(date.getYear());
-					}
-					return texts.join('/');
-				 },
 			},
 		}),
 	)

@@ -1,10 +1,13 @@
-FROM golang:1.16 as builder
+FROM golang:latest as builder
 
 # Set the necessary environment variables
 ENV MYSQL_ROOT_PASSWORD=Passw0rd,12345
 ENV MYSQL_DATABASE=temperature_db
 ENV MYSQL_USER=dbuser
 ENV MYSQL_PASSWORD=heslo
+
+# Install Certificate
+RUN apt-get update && apt-get install -y git curl
 
 # Copy the source code and create the app directory
 COPY . /app
@@ -14,7 +17,7 @@ WORKDIR /app
 RUN go build -o main .
 
 # Create a new stage for the runtime environment
-FROM ubuntu:20.04
+FROM ubuntu:latest
 
 # Install MySQL
 ENV DEBIAN_FRONTEND=noninteractive
