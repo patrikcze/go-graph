@@ -157,6 +157,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 		charts.WithLegendOpts(opts.Legend{
 			Show:   true,
 			Bottom: "0",
+			Align:  "left",
 		}),
 		charts.WithXAxisOpts(opts.XAxis{
 			Name: "Datum a čas",
