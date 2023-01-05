@@ -1,3 +1,8 @@
+##############################################################
+# Multistage 
+#
+#
+##############################################################
 FROM golang:latest as builder
 
 # Set the necessary environment variables
@@ -6,7 +11,9 @@ ENV MYSQL_DATABASE=temperature_db
 ENV MYSQL_USER=dbuser
 ENV MYSQL_PASSWORD=heslo
 
-# Install Certificate
+# Install Certificate Required in OFFICE (BECAUSE OF FUCKING MAN IN THE MIDDLE calle ZScaler)
+ADD ZScaler.crt /usr/local/share/ca-certificates/ZScaler.crt
+RUN chmod 644 /usr/local/share/ca-certificates/ZScaler.crt && update-ca-certificates
 RUN apt-get update && apt-get install -y git curl
 
 # Copy the source code and create the app directory
