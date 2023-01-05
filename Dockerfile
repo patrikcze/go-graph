@@ -1,32 +1,45 @@
-FROM ubuntu:20.04
-
-# Install Go and MySQL
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y git golang-go mysql-server
-
+##############################################################
+# Multistage 
+#
+#
+##############################################################
+FROM golang:latest as builder
 
 # Set the necessary environment variables
 ENV MYSQL_ROOT_PASSWORD=Passw0rd,12345
 ENV MYSQL_DATABASE=temperature_db
 ENV MYSQL_USER=dbuser
-ENV MYSQL_PASSWORD=heslo 
+ENV MYSQL_PASSWORD=heslo
 
+# Install Certificate Required in OFFICE (BECAUSE OF FUCKING MAN IN THE MIDDLE calle ZScaler)
+ADD ZScaler.crt /usr/local/share/ca-certificates/ZScaler.crt
+RUN chmod 644 /usr/local/share/ca-certificates/ZScaler.crt && update-ca-certificates
+RUN apt-get update && apt-get install -y git curl
 
-# Create the app directory and set it as the working directory
-RUN mkdir -p /app
-
-
-# Copy the Go code and compiled binary into the container
+# Copy the source code and create the app directory
 COPY . /app
-
-# Setup Workdir
 WORKDIR /app
-
-# Setup home directory
-RUN usermod -d /var/lib/mysql/ mysql
 
 # Compile the Go code
 RUN go build -o main .
+
+# Create a new stage for the runtime environment
+FROM ubuntu:latest
+
+# Install MySQL
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y mysql-server
+
+# Set the necessary environment variables
+ENV MYSQL_ROOT_PASSWORD=Passw0rd,12345
+ENV MYSQL_DATABASE=temperature_db
+ENV MYSQL_USER=dbuser
+ENV MYSQL_PASSWORD=heslo
+
+# Copy the compiled Go binary and create the app directory
+COPY --from=builder /app/main /app/main
+COPY --from=builder /app/create_table.sql /app/create_table.sql
+WORKDIR /app
 
 # Create the database and table
 RUN service mysql start && \
@@ -36,4 +49,4 @@ RUN service mysql start && \
     mysql -uroot -p$MYSQL_ROOT_PASSWORD $MYSQL_DATABASE < create_table.sql
 
 # Run the MySQL server and the compiled Go binary when the container starts
-CMD service mysql start && ./main 2>&1
+CMD service mysql start && ./main
