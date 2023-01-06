@@ -1,7 +1,7 @@
 ##############################################################
 # Multistage 
-#
-#
+# Compile Go API First and put it to UBUNTU Container together
+# with MySQL Database
 ##############################################################
 FROM golang:latest as builder
 
