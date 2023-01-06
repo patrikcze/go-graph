@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 ```
-## Few suggestion
+## Few suggestions
 
 1. Make sure that your GoLang API is running and accessible from the ESP32. You can test this by trying to access the API from your web browser or by using a CURL command like the one I provided in my previous message.
 2. Make sure that the WiFi connection on the ESP32 is stable and that it can reach the GoLang API server. You can check the status of the WiFi connection by looking at the serial output from the ESP32.
