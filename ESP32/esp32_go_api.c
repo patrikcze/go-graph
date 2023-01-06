@@ -1,3 +1,5 @@
+#include <dummy.h>
+
 #include <WiFi.h>
 #include <WebServer.h>
 #include <Wire.h>
@@ -5,24 +7,22 @@
 #include <Adafruit_BME280.h>
 #include <HTTPClient.h>
 
-// BME280 init
-#define BME280_ADDRESS 0x76
-
 // WIFI Settings
 #define WIFI_SSID "YOUR_WIFI_SSID"
 #define WIFI_PASSWORD "YOUR_PASSWORD"
 #define BME280_ADDRESS 0x76
+#define LED_PIN 2
 
 // Possible DB Server configuration
 //#define DB_SERVER "mysql"
 //#define DB_PORT 3306
 
 // API Server Address and Port
-#define SERVER_ADDRESS "YOUR_API_SERVER"
+#define SERVER_ADDRESS "192.168.1.100"
 #define SERVER_PORT 80
 
 // ALTITUDE
-#define ALTITUDE 218.4 // Altitude for BRNO in Meters
+#define ALTITUDE 218.4 // Altitude for BRNO Heyrovskeho in Meters
 
 Adafruit_BME280 bme;
  
@@ -30,6 +30,13 @@ Adafruit_BME280 bme;
 float temperature, humidity, pressure;
  
 void setup() {
+  // Serial Port
+  Serial.begin(9600);
+
+  // Init led
+  pinMode(LED_PIN, OUTPUT);
+  delay(100);
+
   // Initialize BME280 sensor
   if (!bme.begin(BME280_ADDRESS)) {
     Serial.println("Could not find a valid BME280 sensor, check wiring!");
