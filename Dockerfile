@@ -41,6 +41,9 @@ COPY --from=builder /app/main /app/main
 COPY --from=builder /app/create_table.sql /app/create_table.sql
 WORKDIR /app
 
+# Setup home directory
+RUN usermod -d /var/lib/mysql/ mysql
+
 # Create the database and table
 RUN service mysql start && \
     mysql -uroot -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE $MYSQL_DATABASE" && \
