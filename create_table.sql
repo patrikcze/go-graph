@@ -1,9 +1,12 @@
-CREATE TABLE data (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    time DATETIME NOT NULL,
-    temperature FLOAT NOT NULL,
-    humidity FLOAT NOT NULL,
-    pressure FLOAT NOT NULL
+CREATE DATABASE IF NOT EXISTS temperature_db;
+USE temperature_db;
+
+CREATE TABLE IF NOT EXISTS data (
+id INT AUTO_INCREMENT PRIMARY KEY,
+time DATETIME NOT NULL,
+temperature FLOAT NOT NULL,
+humidity FLOAT NOT NULL,
+pressure FLOAT NOT NULL
 );
 
 INSERT INTO data (time, temperature, humidity, pressure) VALUES
