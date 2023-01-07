@@ -3,7 +3,6 @@
 #include <WiFi.h>
 #include <WiFiUdp.h>
 #include <time.h>
-#include <TimeLib.h>
 
 #include <WebServer.h>
 #include <Wire.h>
@@ -13,7 +12,7 @@
 
 
 // WIFI Settings
-#define WIFI_SSID "YOUR-SSID-NAME"
+#define WIFI_SSID "YOUR-WIFI-SSID"
 #define WIFI_PASSWORD "YOUR-PASSWORD"
 #define BME280_ADDRESS 0x76
 #define LED_PIN 2
@@ -78,15 +77,18 @@ void setup() {
   // Connect to the time server
   udp.begin(timeServerPort);
   sendNTPpacket(timeServerIP);
-  delay(1000);
+  delay(2000);
 
   // Get the current time from the time server
+  // time_t currentTime;
   if (getCurrentTime(currentTime)) {
     // Set the current time
     setTime(currentTime);
 
     // Print the current time to the serial monitor
+    struct tm *timeinfo;
     timeinfo = localtime(&currentTime);
+    char buffer[80];
     strftime(buffer, 80, "%A, %B %d %Y %H:%M:%S", timeinfo);
     Serial.println(buffer);
   }
@@ -103,10 +105,10 @@ void loop() {
   float seaLevelPressure = bme.seaLevelForAltitude(ALTITUDE, pressure); // hPa
  
   // Print the data to the serial monitor
+  Serial.println("----------------------------------");
   Serial.print("Current time is : ");
   Serial.println(getTimeString());
-  Serial.println("----------------------");
-  //Serial.println(getCurrentTime(currentTime));
+  Serial.println("----------------------------------");
   Serial.print("Temperature: ");
   Serial.print(temperature);
   Serial.println(" *C");
@@ -136,14 +138,14 @@ void loop() {
 String getTimeString() {
   time_t now = time(nullptr);
   struct tm *timeinfo;
-  timeinfo = localtime(&currentTime);
+  timeinfo = localtime(&now);
   char buffer[80];
   strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", timeinfo);
   return String(buffer);
 }
 
 
-/*
+// Sets actuall time CET Timezone by default
 void setTime(time_t currentTime)
 {
   struct tm timeinfo;
@@ -153,11 +155,10 @@ void setTime(time_t currentTime)
   tzset();
   timeinfo.tm_isdst = -1;
   currentTime = mktime(&timeinfo);
-  Serial.printf("Setting time using mktime() to: %s", asctime(&timeinfo));
+  Serial.printf("Setting time using settimeofday() to: %s", asctime(&timeinfo));
   timeval tv = { currentTime, 0 };
   settimeofday(&tv, nullptr);
 }
-*/
 
 // Send an NTP request to the time server
 void sendNTPpacket(IPAddress& address) {
