@@ -9,6 +9,7 @@ humidity FLOAT NOT NULL,
 pressure FLOAT NOT NULL
 );
 
+/*
 INSERT INTO data (time, temperature, humidity, pressure) VALUES
     ('2022-01-01 00:00:00', 20, 78, 1023),
     ('2022-01-01 01:00:00', 21, 75, 1023),
@@ -31,3 +32,4 @@ INSERT INTO data (time, temperature, humidity, pressure) VALUES
     ('2022-01-01 18:00:00', -10, 50, 1012),
     ('2022-01-01 19:00:00', -5, 65, 1010),
     ('2022-01-01 20:00:00', -3.2, 95, 1023);
+*/
