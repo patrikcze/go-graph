@@ -93,6 +93,7 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Data written to database successfully"))
 }
 
+// Render the chart
 func renderGraph(w http.ResponseWriter, _ *http.Request) {
 	// Reset Items
 	temperatures := make([]opts.LineData, 0)
@@ -154,6 +155,9 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			Title:    "Graf Teplot (ESP32 & BME280)",
 			Subtitle: "Pokusí se vykreslit data z databáze. Teploty, Vlhkosti a tlaky.",
 		}),
+		charts.WithTooltipOpts(opts.Tooltip{
+			Trigger: "item",
+		}),
 		charts.WithLegendOpts(opts.Legend{
 			Show:   true,
 			Bottom: "50%",
@@ -186,6 +190,12 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 				LineHeight:    "0",
 			}},
 		),
+		charts.WithXAxisOpts(opts.XAxis{
+			// Other options...
+			AxisLabel: &opts.AxisLabel{
+				Formatter: "{value}°C",
+			},
+		}),
 	)
 
 	// Put data into instance
