@@ -156,7 +156,9 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			Subtitle: "Pokusí se vykreslit data z databáze. Teploty, Vlhkosti a tlaky.",
 		}),
 		charts.WithTooltipOpts(opts.Tooltip{
-			Trigger: "item",
+			Show:      true,
+			Trigger:   "axis",
+			TriggerOn: "click",
 		}),
 		charts.WithLegendOpts(opts.Legend{
 			Show:   true,
@@ -170,32 +172,19 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 		charts.WithXAxisOpts(opts.XAxis{
 			Name: "Datum a čas",
 			Show: true,
-			Type: "time",
+			//Type: "time",
 			AxisLabel: &opts.AxisLabel{
-				Show:     true,
-				Interval: "",
-				Inside:   false,
-				Rotate:   90,
-				Margin:   0,
-				//Formatter:     "{MM}:{DD}",
-				ShowMinLabel:  false,
-				ShowMaxLabel:  false,
-				Color:         "",
-				FontStyle:     "",
-				FontWeight:    "",
-				FontFamily:    "",
-				FontSize:      "",
+				Show:          true,
+				Interval:      "60",
+				Inside:        false,
+				Rotate:        90,
+				Margin:        0,
+				Formatter:     "{value|hh:mm}",
 				Align:         "",
-				VerticalAlign: "",
-				LineHeight:    "0",
+				VerticalAlign: "right",
+				LineHeight:    "15",
 			}},
 		),
-		charts.WithXAxisOpts(opts.XAxis{
-			// Other options...
-			AxisLabel: &opts.AxisLabel{
-				Formatter: "{value}°C",
-			},
-		}),
 	)
 
 	// Put data into instance
