@@ -1,5 +1,14 @@
 # PoC 
 Trying to mess around with GoLang, prepare simple APi which will collect data from ESP32 + BME280 Module, uploads data to MySQL Database and will draw a line chart.
+## ESP32 & BME280
+
+Here is an example of how you can connect the BME280 sensor to the ESP32:
+
+1. Connect the BME280 sensor to the ESP32 using the I2C interface. You will need to connect the SDA (data) and SCL (clock) lines of the sensor to the corresponding SDA and SCL pins on the ESP32. You will also need to connect the VCC and GND pins of the sensor to the appropriate power supply and ground pins on the ESP32.
+2. Install the necessary libraries on your ESP32 board. You will need the "Adafruit BME280 Library" and the "Adafruit Unified Sensor Library" to use the BME280 sensor with the ESP32. You can install these libraries by going to Sketch > Include Library > Manage Libraries in the Arduino IDE and searching for the "Adafruit BME280" and "Adafruit Unified Sensor" libraries.
+3. Initialize the BME280 sensor in your code by calling the begin() function of the Adafruit_BME280 class. You will need to pass the I2C address of the BME
+
+![board](./img/board_esp32_bme280.jpeg)
 
 ## ESP 32 Example code could look like this
 
