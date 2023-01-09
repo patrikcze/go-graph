@@ -185,12 +185,14 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			Show: true,
 			Feature: &opts.ToolBoxFeature{
 				SaveAsImage: &opts.ToolBoxFeatureSaveAsImage{
-					Show: true,
-					Type: "png",
-					Name: "Heyrovskeho5.png",
+					Show:  true,
+					Type:  "png",
+					Name:  "Heyrovskeho5.png",
+					Title: "Uložit",
 				},
 				DataView: &opts.ToolBoxFeatureDataView{
-					Show: true,
+					Show:  true,
+					Title: "DataView",
 				},
 				DataZoom: &opts.ToolBoxFeatureDataZoom{
 					Show: true,
