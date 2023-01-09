@@ -145,6 +145,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 
 	// Create a new line instance
 	line := charts.NewLine()
+
 	// set some global options like Title/Legend/ToolTip or anything else
 	line.SetGlobalOptions(
 		charts.WithInitializationOpts(opts.Initialization{
@@ -160,6 +161,11 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			Trigger:   "axis",
 			TriggerOn: "click",
 		}),
+		charts.WithToolboxOpts(opts.Toolbox{
+			Feature: &opts.ToolBoxFeature{
+				SaveAsImage: &opts.ToolBoxFeatureSaveAsImage{},
+			},
+		}),
 		charts.WithLegendOpts(opts.Legend{
 			Show:   true,
 			Bottom: "50%",
@@ -169,20 +175,26 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			Top:    "50%",
 			Orient: "vertical",
 		}),
+		charts.WithDataZoomOpts(opts.DataZoom{
+			Type:  "slider",
+			Start: 0,
+			End:   100,
+		}),
 		charts.WithXAxisOpts(opts.XAxis{
 			Name: "Datum a čas",
 			Show: true,
+			//Width: "50%",
 			//Type: "time",
 			AxisLabel: &opts.AxisLabel{
 				Show: true,
 				//Interval:  "10",
 				Inside:    false,
-				Rotate:    90,
+				Rotate:    45,
 				Margin:    0,
 				Formatter: "",
 				Align:     "",
 				//VerticalAlign: "right",
-				LineHeight: "100",
+				//LineHeight: "250",
 			}},
 		),
 	)
