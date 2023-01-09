@@ -225,10 +225,14 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 
 	// Put data into instance
 	line.SetXAxis(times).
-		AddSeries("Teploty (℃)", temperatures).
+		AddSeries("Teploty (℃)", temperatures, charts.WithLabelOpts(opts.Label{Show: true})).
 		AddSeries("Vlhkosti (%)", humidities).
 		AddSeries("Tlaky (hPa)", pressures).
-		SetSeriesOptions(charts.WithLineChartOpts(opts.LineChart{Smooth: true}))
+		SetSeriesOptions(charts.WithLineChartOpts(
+			opts.LineChart{
+				Smooth: true,
+			}),
+		)
 	line.Render(w)
 
 }
