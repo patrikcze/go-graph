@@ -145,21 +145,28 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 
 	// Create a new line instance
 	line := charts.NewLine()
+
 	// set some global options like Title/Legend/ToolTip or anything else
 	line.SetGlobalOptions(
+		// Initial option of Chart
 		charts.WithInitializationOpts(opts.Initialization{
 			Theme:     types.ThemeWesteros,
 			PageTitle: "Grafík",
+			Height:    "768px",
+			Width:     "1024px",
 		}),
+		// Name of the chart and subtitle
 		charts.WithTitleOpts(opts.Title{
 			Title:    "Graf Teplot (ESP32 & BME280)",
 			Subtitle: "Pokusí se vykreslit data z databáze. Teploty, Vlhkosti a tlaky.",
 		}),
+		// Shows tool tip on click
 		charts.WithTooltipOpts(opts.Tooltip{
 			Show:      true,
 			Trigger:   "axis",
 			TriggerOn: "click",
 		}),
+		// Setup Legend
 		charts.WithLegendOpts(opts.Legend{
 			Show:   true,
 			Bottom: "50%",
@@ -169,9 +176,34 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			Top:    "50%",
 			Orient: "vertical",
 		}),
+		charts.WithDataZoomOpts(opts.DataZoom{
+			Type:  "slider",
+			Start: 0,
+			End:   100,
+		}),
+		charts.WithToolboxOpts(opts.Toolbox{
+			Feature: &opts.ToolBoxFeature{
+				SaveAsImage: &opts.ToolBoxFeatureSaveAsImage{
+					Show: true,
+					Type: "png",
+					Name: "Heyrovskeho5.png",
+				},
+				DataView: &opts.ToolBoxFeatureDataView{
+					Show: true,
+				},
+				DataZoom: &opts.ToolBoxFeatureDataZoom{
+					Show: true,
+				},
+				Restore: &opts.ToolBoxFeatureRestore{
+					Show: true,
+				},
+			},
+			Top: "",
+		}),
 		charts.WithXAxisOpts(opts.XAxis{
 			Name: "Datum a čas",
 			Show: true,
+			//Width: "50%",
 			//Type: "time",
 			AxisLabel: &opts.AxisLabel{
 				Show: true,
@@ -182,7 +214,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 				Formatter: "",
 				Align:     "",
 				//VerticalAlign: "right",
-				LineHeight: "100",
+				//LineHeight: "250",
 			}},
 		),
 	)
