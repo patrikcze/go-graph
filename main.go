@@ -142,10 +142,21 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 		pressures = append(pressures, opts.LineData{Value: pres})
 
 	}
+	/*
+		fn := `function(value){
+			        let label;
+			        if (value.getMinutes() < 10){
+			          label = value.getHours() + ":0" +value.getMinutes();
+			        }
+			        else {
+			          label = value.getHours() + ":" +value.getMinutes();
+			        }
+			        return label;
+			      }`
+	*/
 
 	// Create a new line instance
 	line := charts.NewLine()
-
 	// set some global options like Title/Legend/ToolTip or anything else
 	line.SetGlobalOptions(
 		// Initial option of Chart
@@ -207,16 +218,20 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 		charts.WithXAxisOpts(opts.XAxis{
 			Name: "Datum a čas",
 			Show: true,
+			//Max:  "dataMax",
+			//Type: "category",
+			//Data: times,
 			//Width: "50%",
 			//Type: "time",
 			AxisLabel: &opts.AxisLabel{
 				Show: true,
 				//Interval:  "10",
-				Inside:    false,
-				Rotate:    90,
-				Margin:    0,
-				Formatter: "",
-				Align:     "",
+				Inside: false,
+				//Rotate: 90,
+				Margin: 0,
+				//Formatter: opts.FuncOpts(fn),
+				//Formatter: "{HH}:{mm}",
+				Align: "",
 				//VerticalAlign: "right",
 				//LineHeight: "250",
 			}},
@@ -226,8 +241,8 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 	// Put data into instance
 	line.SetXAxis(times).
 		AddSeries("Teploty (℃)", temperatures, charts.WithLabelOpts(opts.Label{Show: true})).
-		AddSeries("Vlhkosti (%)", humidities).
-		AddSeries("Tlaky (hPa)", pressures).
+		AddSeries("Vlhkosti (%)", humidities, charts.WithLabelOpts(opts.Label{Show: true})).
+		AddSeries("Tlaky (hPa)", pressures, charts.WithLabelOpts(opts.Label{Show: true})).
 		SetSeriesOptions(charts.WithLineChartOpts(
 			opts.LineChart{
 				Smooth: true,
@@ -235,4 +250,9 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 		)
 	line.Render(w)
 
+}
+
+// Test function to return time as string
+func formatTime(t time.Time) string {
+	return t.Format("15:04")
 }
