@@ -189,6 +189,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 				DataZoom: &opts.ToolBoxFeatureDataZoom{},
 				Restore:  &opts.ToolBoxFeatureRestore{},
 			},
+			Right: "20%",
 		}),
 		charts.WithXAxisOpts(opts.XAxis{
 			Name: "Datum a čas",
