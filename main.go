@@ -198,7 +198,8 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 					Show: true,
 				},
 				Restore: &opts.ToolBoxFeatureRestore{
-					Show: true,
+					Show:  true,
+					Title: "Refresh",
 				},
 			},
 			Top: "",
