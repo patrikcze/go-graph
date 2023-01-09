@@ -182,12 +182,20 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 		}),
 		charts.WithToolboxOpts(opts.Toolbox{
 			Feature: &opts.ToolBoxFeature{
-				SaveAsImage: &opts.ToolBoxFeatureSaveAsImage{},
+				SaveAsImage: &opts.ToolBoxFeatureSaveAsImage{
+					Show: true,
+					Type: "png",
+					Name: "Heyrovskeho5.png",
+				},
 				DataView: &opts.ToolBoxFeatureDataView{
 					Show: true,
 				},
-				DataZoom: &opts.ToolBoxFeatureDataZoom{},
-				Restore:  &opts.ToolBoxFeatureRestore{},
+				DataZoom: &opts.ToolBoxFeatureDataZoom{
+					Show: true,
+				},
+				Restore: &opts.ToolBoxFeatureRestore{
+					Show: true,
+				},
 			},
 			Right: "20%",
 		}),
