@@ -182,6 +182,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			End:   100,
 		}),
 		charts.WithToolboxOpts(opts.Toolbox{
+			Show: true,
 			Feature: &opts.ToolBoxFeature{
 				SaveAsImage: &opts.ToolBoxFeatureSaveAsImage{
 					Show: true,
