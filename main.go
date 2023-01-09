@@ -171,8 +171,8 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			Show:   true,
 			Bottom: "50%",
 			Align:  "right",
-			Left:   "88%",
-			Right:  "12%",
+			Left:   "90%",
+			Right:  "10%",
 			Top:    "50%",
 			Orient: "vertical",
 		}),
@@ -187,7 +187,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 				SaveAsImage: &opts.ToolBoxFeatureSaveAsImage{
 					Show:  true,
 					Type:  "png",
-					Name:  "Heyrovskeho5.png",
+					Name:  "Heyrovskeho5",
 					Title: "Uložit",
 				},
 				DataView: &opts.ToolBoxFeatureDataView{
