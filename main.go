@@ -148,6 +148,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 
 	// set some global options like Title/Legend/ToolTip or anything else
 	line.SetGlobalOptions(
+		// Initial option of Chart
 		charts.WithInitializationOpts(opts.Initialization{
 			Theme:     types.ThemeWesteros,
 			PageTitle: "Grafík",
@@ -165,12 +166,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			Trigger:   "axis",
 			TriggerOn: "click",
 		}),
-		// Show Toolbox
-		charts.WithToolboxOpts(opts.Toolbox{
-			Feature: &opts.ToolBoxFeature{
-				SaveAsImage: &opts.ToolBoxFeatureSaveAsImage{},
-			},
-		}),
+		// Setup Legend
 		charts.WithLegendOpts(opts.Legend{
 			Show:   true,
 			Bottom: "50%",
