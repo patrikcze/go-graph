@@ -151,7 +151,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 		charts.WithInitializationOpts(opts.Initialization{
 			Theme:     types.ThemeWesteros,
 			PageTitle: "Grafík",
-			Height:    "800px",
+			Height:    "768px",
 			Width:     "1024px",
 		}),
 		// Name of the chart and subtitle
