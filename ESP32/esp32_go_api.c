@@ -96,6 +96,12 @@ void setup() {
 }
 
 void loop() {
+
+   if (WiFi.status() != WL_CONNECTED) {
+    // WiFi connection is lost, try to reconnect
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  }
+
   // Read temperature, humidity, and pressure data from the BME280 sensor
   temperature = bme.readTemperature();
   humidity = bme.readHumidity();
