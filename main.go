@@ -180,6 +180,16 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			Start: 0,
 			End:   100,
 		}),
+		charts.WithToolboxOpts(opts.Toolbox{
+			Feature: &opts.ToolBoxFeature{
+				SaveAsImage: &opts.ToolBoxFeatureSaveAsImage{},
+				DataView: &opts.ToolBoxFeatureDataView{
+					Show: true,
+				},
+				DataZoom: &opts.ToolBoxFeatureDataZoom{},
+				Restore:  &opts.ToolBoxFeatureRestore{},
+			},
+		}),
 		charts.WithXAxisOpts(opts.XAxis{
 			Name: "Datum a čas",
 			Show: true,
@@ -189,7 +199,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 				Show: true,
 				//Interval:  "10",
 				Inside:    false,
-				Rotate:    45,
+				Rotate:    90,
 				Margin:    0,
 				Formatter: "",
 				Align:     "",
