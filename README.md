@@ -144,6 +144,19 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 ```
+
+## Actual ESP32 C Language code used
+![C langguage Code](./ESP32/esp32_go_api.c?raw=true)
+
+It uses a number of libraries, including `WiFi`, `WiFiUdp`, `time`, `WebServer`, `Wire`, `Adafruit_Sensor`, `Adafruit_BME280`, and `HTTPClient` to connect to a WiFi network, retrieve the current time from a time server, read sensor data from a `BME280` sensor (a sensor that measures temperature, humidity, and pressure), and post that data to an Go `API server`.
+
+First, it initializes the `BME280` sensor and connects to the WiFi network using the credentials provided in the WIFI_SSID and WIFI_PASSWORD constants. Then it uses the WiFiUDP library to send a packet to a time server to retrieve the current time. The current time is then used to set the time on the device.
+
+In the loop, it repeatedly `checks the WiFi connection` and if the connection is lost it tries to reconnect. Then it reads the `temperature`, `humidity`, and `pressure` data from the `BME280 sensor` and prints the data to the serial monitor along with the `current time`. Finally, the code then post this data to the Go `api server` with an `http client`.
+
+Overall, this code is designed to retrieve sensor data from a BME280 sensor, get the current time, and then post that data to an API server via a wifi connection.
+
+
 ## Few suggestions
 
 1. Make sure that your GoLang API is running and accessible from the ESP32. You can test this by trying to access the API from your web browser or by using a CURL command like the one I provided in my previous message.
