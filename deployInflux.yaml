@@ -11,7 +11,6 @@ data:
       bind-address = ":8086"
       # Determines whether user authentication is enabled for the HTTP endpoint.
       auth-enabled = true
-
 ---
 apiVersion: v1
 kind: Service
@@ -26,7 +25,6 @@ spec:
     targetPort: 8086
   selector:
     app: influxdb
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -67,7 +65,6 @@ spec:
       - name: config
         configMap:
           name: influxdb-config
-
 ---
 apiVersion: batch/v1
 kind: Job
@@ -92,18 +89,24 @@ spec:
             --username=admin \
             --password="$INFLUXDB_ADMIN_PASSWORD" \
             --org=myorg \
-            --bucket=mybucket
+            --bucket=mybucket \
+            --retention=30d \
+            --token-output-file=/etc/influxdb/admin.token
         env:
         - name: INFLUXDB_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
               name: influxdb-secrets
               key: INFLUXDB_ADMIN_PASSWORD
-        env:
-        - name: INFLUXDB_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: influxdb-secrets
-              key: INFLUXDB_TOKEN
-      restartPolicy: Never
-  backoffLimit: 4
+        volumeMounts:
+        - name: config
+          mountPath: /etc/influxdb
+        - name: token-output
+          mountPath: /etc/influxdb
+      volumes:
+      - name: config
+        configMap:
+          name: influxdb-config
+      - name: token-output
+        emptyDir: {}
+  restartPolicy: Never
