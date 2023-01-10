@@ -18,7 +18,7 @@ For basic understanding of things I've selected easy setup of Temperature measur
 ## Rendering the Graph
 GoLang API won't do much. Basically it can write data with `writedata` `func` to MySQL Database and It can draw simple line chart. Both are pretty simple functions. 
 
-![graph](./img/chart.png)
+![graph](https://github.com/patrikcze/go-graph/blob/main/img/chart.png?raw=true)
 
 Data being sent from ESP32 device directly via `HTTP` `POST` requests. 
 
@@ -30,7 +30,7 @@ Here is an example of how you can connect the BME280 sensor to the ESP32:
 2. Install the necessary libraries on your ESP32 board. You will need the "Adafruit BME280 Library" and the "Adafruit Unified Sensor Library" to use the BME280 sensor with the ESP32. You can install these libraries by going to Sketch > Include Library > Manage Libraries in the Arduino IDE and searching for the "Adafruit BME280" and "Adafruit Unified Sensor" libraries.
 3. Initialize the BME280 sensor in your code by calling the begin() function of the Adafruit_BME280 class. You will need to pass the I2C address of the BME
 
-![board](./img/board_esp32_bme280.jpeg)
+![board](https://github.com/patrikcze/go-graph/blob/main/img/board_esp32_bme280.jpeg?raw=true)
 
 ## ESP 32 Example code could look like this
 
