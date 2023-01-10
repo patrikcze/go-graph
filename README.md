@@ -1,6 +1,10 @@
 # PoC 
 Trying to mess around with GoLang, prepare simple APi which will collect data from ESP32 + BME280 Module, uploads data to MySQL Database and will draw a line chart.
 
+
+**THIS ALL HAS BEEN DONE WITH HELP OF OpenAI!**
+
+
 ## Requirements
 1. **ESP32** Dev Board
 2. **BME280** Temperature sensor from Bosch
@@ -16,7 +20,7 @@ At the beginning, I would like to mention here, that I'm not Arduiono specialist
 For basic understanding of things I've selected easy setup of Temperature measuring device. Since I have less knowledge of modern `APIs` or Containers I wanted to do it this way. 
 
 ## Rendering the Graph
-GoLang API won't do much. Basically it can write data with `writedata` `func` to MySQL Database and It can draw simple line chart. Both are pretty simple functions. 
+GoLang API won't do much. Basically it can write data with `writedata` `func` to MySQL Database and It can draw simple line chart with `renderGraph` function. Both are pretty simple functions. In `renderGraph` function I've used Go-Echarts package to visualize the data. Visualization is basic and it is not perfect. It is important to say that some limits were reached already. Go-Echarts do not have all the functionality of Apache ECharts implemented. 
 
 ![graph](./img/chart.png)
 
