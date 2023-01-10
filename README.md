@@ -4,6 +4,9 @@ Trying to mess around with GoLang, prepare simple APi which will collect data fr
 
 **THIS ALL HAS BEEN DONE WITH HELP OF OpenAI!**
 
+Let's see how far we can go. :-)
+
+
 ### Description
 
 Builds a docker image with Ubuntu + MySQL and uploads compiled Go API into `/app` directory. Compiler is using ZSCaler Root Certificate (this is required for me, you can remove it completely). 
