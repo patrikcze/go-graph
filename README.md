@@ -1,5 +1,27 @@
 # PoC 
 Trying to mess around with GoLang, prepare simple APi which will collect data from ESP32 + BME280 Module, uploads data to MySQL Database and will draw a line chart.
+
+## Requirements
+1. **ESP32** Dev Board
+2. **BME280** Temperature sensor from Bosch
+3. **MicroUSB Cable** / **Battery** or **USB 5V/1A** or other Source of energy
+4. **Virtual** or **Cloud Machine** running **linux**
+5. GoLang, VSCode, Arduino IDE
+6. **Docker**, Podman or K8S for running Container.
+
+
+## Introduction
+At the beginning, I would like to mention here, that I'm not Arduiono specialist or programmer. I'm regular IT guy. I just wanted to try something new and different way. 
+
+For basic understanding of things I've selected easy setup of Temperature measuring device. Since I have less knowledge of modern `APIs` or Containers I wanted to do it this way. 
+
+## Rendering the Graph
+GoLang API won't do much. Basically it can write data with `writedata` `func` to MySQL Database and It can draw simple line chart. Both are pretty simple functions. 
+
+![graph](./img/chart.png)
+
+Data being sent from ESP32 device directly via `HTTP` `POST` requests. 
+
 ## ESP32 & BME280
 
 Here is an example of how you can connect the BME280 sensor to the ESP32:
