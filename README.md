@@ -4,6 +4,33 @@ Trying to mess around with GoLang, prepare simple APi which will collect data fr
 
 **THIS ALL HAS BEEN DONE WITH HELP OF OpenAI!**
 
+### Description
+
+Builds a docker image with Ubuntu + MySQL and uploads compiled Go API into `/app` directory. Compiler is using ZSCaler Root Certificate (this is required for me, you can remove it completely). 
+
+```bash
+make build
+```
+
+Will start docker container with MySQL Database and GO Lang API running. 
+You can edit `create_table.sql` and add example data if you want. 
+
+```bash
+make run 
+```
+
+Go API is listening on port `:8080`
+Port `:8080` is exposed to port `:80` then. 
+
+- `http://localhost/` will render graph from data collected.
+- `http://localhost/writedata/` will write data to MySQL Database
+
+You can test the api runnin `curl` command: 
+
+```bash
+curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d "time=2019-01-01 01:01:01&temperature=25.5&humidity=50.0&pressure=1005.5&param1=value1&param2=value2" http://SERVER_ADDRESS:SERVER_PORT/writedata
+
+```
 
 ## Requirements
 1. **ESP32** Dev Board
@@ -20,7 +47,8 @@ At the beginning, I would like to mention here, that I'm not Arduiono specialist
 For basic understanding of things I've selected easy setup of Temperature measuring device. Since I have less knowledge of modern `APIs` or Containers I wanted to do it this way. 
 
 ## Rendering the Graph
-GoLang API won't do much. Basically it can write data with `writedata` `func` to MySQL Database and It can draw simple line chart with `renderGraph` function. Both are pretty simple functions. In `renderGraph` function I've used Go-Echarts package to visualize the data. Visualization is basic and it is not perfect. It is important to say that some limits were reached already. Go-Echarts do not have all the functionality of Apache ECharts implemented. 
+GoLang API won't do much. Basically it can write data with `writedata` `func` to MySQL Database and It can draw simple line chart with `renderGraph` function. Both are pretty simple functions. In `renderGraph` function I've used Go-Echarts package to visualize the data. Visualization is basic and it is not perfect. It is important to say that some limits were reached already. Go-Echarts do not have all the functionality of Apache ECharts implemented, therefor there are some small glitches. 
+
 
 ![graph](./img/chart.png)
 
