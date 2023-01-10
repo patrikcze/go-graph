@@ -177,7 +177,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			Trigger:   "axis",
 			TriggerOn: "click",
 		}),
-		// Setup Legend
+		// Will try to render Legend (you can click on each series)
 		charts.WithLegendOpts(opts.Legend{
 			Show:   true,
 			Bottom: "50%",
@@ -187,11 +187,13 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			Top:    "50%",
 			Orient: "vertical",
 		}),
+		// This will setup DataZoom Slider in the chart
 		charts.WithDataZoomOpts(opts.DataZoom{
 			Type:  "slider",
 			Start: 0,
 			End:   100,
 		}),
+		// This will add Toolbox to top right corner and allows to export to PNG or Show dataset.
 		charts.WithToolboxOpts(opts.Toolbox{
 			Show: true,
 			Feature: &opts.ToolBoxFeature{
@@ -215,6 +217,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			},
 			Top: "",
 		}),
+		// Some basic options for X Axis
 		charts.WithXAxisOpts(opts.XAxis{
 			Name: "Datum a čas",
 			Show: true,
@@ -223,6 +226,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			//Data: times,
 			//Width: "50%",
 			//Type: "time",
+			// Options for X Axis Labels (GRID is not supported in Go-ECharts package!!!)
 			AxisLabel: &opts.AxisLabel{
 				Show: true,
 				//Interval:  "10",
@@ -238,7 +242,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 		),
 	)
 
-	// Put data into instance
+	// Puts data into instance and setup some further options to each serie.
 	line.SetXAxis(times).
 		AddSeries("Teploty (℃)", temperatures, charts.WithLabelOpts(opts.Label{Show: true})).
 		AddSeries("Vlhkosti (%)", humidities, charts.WithLabelOpts(opts.Label{Show: true})).
