@@ -41,7 +41,7 @@ COPY --from=builder /app/create_table.sql /app/create_table.sql
 RUN chmod +x /app/main
 
 # Setup working dir
-WORKDIR /app
+# WORKDIR ["/app"]
 
 # ENTRYPOINT ./main
-ENTRYPOINT [ "./main" ] 
+CMD [ "/app/main 2>&1" ] 
