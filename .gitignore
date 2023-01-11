@@ -1,5 +1,5 @@
 # Ignore ZScaler Certificate / Required for Office setup
-.ZScaler.crt
+./ZScaler.crt
 *.crt
 *.cer
 ./example/*
