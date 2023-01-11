@@ -23,8 +23,7 @@ services:
       - "80:8080"
     depends_on:
       - db
-    entrypoint: ["/app/main"]
-
+    entrypoint: /app/main
 # Names our volumes
 volumes:
   my-sql-db-vol:

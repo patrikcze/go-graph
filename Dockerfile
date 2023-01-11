@@ -43,5 +43,5 @@ RUN chmod +x /app/main
 # Setup working dir
 WORKDIR /app
 
-# CMD ./main
-CMD "./main"
+# ENTRYPOINT ./main
+ENTRYPOINT [ "/app/main" ] 
