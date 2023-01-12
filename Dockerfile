@@ -25,13 +25,14 @@ RUN go build -o main .
 
 # Create a new stage for the runtime environment
 #FROM ubuntu:latest
-FROM ubuntu:latest
+FROM ubuntu:22.04
 
 # Set the necessary environment variables
 ENV MYSQL_ROOT_PASSWORD=Passw0rd,12345
 ENV MYSQL_DATABASE=temperature_db
 ENV MYSQL_USER=dbuser
 ENV MYSQL_PASSWORD=heslo
+
 
 # CREATE DIRECTORY
 RUN mkdir -p /app
