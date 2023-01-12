@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -14,13 +15,25 @@ import (
 	"github.com/go-echarts/go-echarts/v2/types"
 )
 
+/*
 const (
 	DB_USER     = "dbuser"
 	DB_PASSWORD = "heslo"
 	DB_NAME     = "temperature_db"
 )
+*/
+
+var dbServer string
+var dbUser string
+var dbPassword string
+var dbName string
 
 func main() {
+
+	dbUser = os.Getenv("MYSQL_USER")
+	dbPassword = os.Getenv("MYSQL_PASSWORD")
+	dbName = os.Getenv("MYSQL_DATABASE")
+
 	/*r := mux.NewRouter()
 	r.HandleFunc("/graph", chartHandler)
 	http.ListenAndServe(":8080", r)
@@ -71,7 +84,7 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Connect to the database
-	db, err := sql.Open("mysql", DB_USER+":"+DB_PASSWORD+"@/"+DB_NAME+"?parseTime=true")
+	db, err := sql.Open("mysql", dbUser+":"+dbPassword+"@/"+dbName+"?parseTime=true")
 	if err != nil {
 		log.Printf("There was problem with connection to databsae : %v", err)
 		http.Error(w, "Error connecting to database: "+err.Error(), http.StatusInternalServerError)
@@ -101,7 +114,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 	pressures := make([]opts.LineData, 0)
 	var times []time.Time
 	// Connect to the database
-	db, err := sql.Open("mysql", DB_USER+":"+DB_PASSWORD+"@/"+DB_NAME+"?parseTime=true")
+	db, err := sql.Open("mysql", dbUser+":"+dbPassword+"@/"+dbName+"?parseTime=true")
 	if err != nil {
 		http.Error(w, "Error connecting to database: "+err.Error(), http.StatusInternalServerError)
 		return
