@@ -12,11 +12,9 @@ services:
       - my-sql-db-vol:/var/lib/mysql
     ports:
       - "3306:3306"
-    command: bash -c "mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e 'CREATE DATABASE ${MYSQL_DATABASE};CREATE USER ${MYSQL_USER}@'%' IDENTIFIED BY ${MYSQL_PASSWORD};GRANT ALL ON ${MYSQL_DATABASE}.* TO ${MYSQL_USER}@'%';'"
+    
     restart: always
   go-api:
-    links:
-      - db
     build:
       context: .
     ports:
