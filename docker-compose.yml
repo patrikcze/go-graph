@@ -8,17 +8,15 @@ services:
       MYSQL_USER: dbuser
       MYSQL_PASSWORD: heslo
     volumes:
+      - ./init:/docker-entrypoint-initdb.d
       - my-sql-db-vol:/var/lib/mysql
     ports:
       - "3306:3306"
+    command: bash -c "mysql -uroot -p${MYSQL_ROOT_PASSWORD} -e 'CREATE USER ${MYSQL_USER} IDENTIFIED BY ${MYSQL_PASSWORD}; GRANT ALL ON ${MYSQL_DATABASE}.* TO ${MYSQL_USER}@'%';'"
     restart: always
   go-api:
     build:
       context: .
-      args:
-        - GO_ENV=production
-    volumes:
-      - .:/app
     ports:
       - "80:8080"
     depends_on:

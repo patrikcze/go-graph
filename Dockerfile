@@ -44,4 +44,4 @@ RUN chmod +x /app/main
 WORKDIR /app
 
 # ENTRYPOINT ./main
-ENTRYPOINT ["/app/main"]
+CMD ["./main"]
