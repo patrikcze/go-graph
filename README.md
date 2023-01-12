@@ -13,7 +13,8 @@ I'm messing with this all the time, so appologize for inconsistency.
 - MySQL Server is now running on official `mysql:latest` image. 
 - Go API is being compiled in `golang:latest`
 - `ubuntu:22.04` has been used for hosting `go-api`.
-
+- `main.go` - Updated API To use `db, err := sql.Open("mysql", dbUser+":"+dbPassword+"@tcp(db)/"+dbName+"?parseTime=true")`
+- `main.go` - changed CONSTS to variables and reading data from ENV variables.
 
 ## MySQL Database
 
