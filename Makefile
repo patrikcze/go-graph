@@ -3,3 +3,6 @@ build:
 
 run:
 	docker run -d -p 80:8080 go-api
+
+start:
+	docker-compose up -d
