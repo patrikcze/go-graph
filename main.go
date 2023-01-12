@@ -43,6 +43,7 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
+// Update (12.1.2023 - Using TCP connection for MySQL using "db" name of container.)
 func writeData(w http.ResponseWriter, r *http.Request) {
 	// Parse the form data
 	err := r.ParseForm()
@@ -106,7 +107,7 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Data written to database successfully"))
 }
 
-// Render the chart
+// Render the chart (12.1.2023 - tpc connection to MySQL using "db" name of container.)
 func renderGraph(w http.ResponseWriter, _ *http.Request) {
 	// Reset Items
 	temperatures := make([]opts.LineData, 0)
