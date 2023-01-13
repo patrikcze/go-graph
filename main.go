@@ -43,6 +43,14 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
+// writeData handles HTTP requests to write data to the MySQL database.
+// It expects the following form values in the request body:
+// - "time": a string in the format "2006-01-02 15:04:05"
+// - "temperature": a float value representing the temperature
+// - "humidity": a float value representing the humidity
+// - "pressure": a float value representing the pressure
+// If the form values are not in the expected format or there is a problem connecting to the database,
+// it will return an appropriate error status code and message.
 // Update (12.1.2023 - Using TCP connection for MySQL using "db" name of container.)
 func writeData(w http.ResponseWriter, r *http.Request) {
 	// Parse the form data
@@ -107,6 +115,10 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Data written to database successfully"))
 }
 
+// renderGraph handles HTTP requests to render a chart of the data from the MySQL database.
+// It queries the data from the "data" table in the database and pass it to the go-echarts package
+// to generate the chart.
+// It takes no parameters and returns a rendered chart as an HTTP response.
 // Render the chart (12.1.2023 - tpc connection to MySQL using "db" name of container.)
 func renderGraph(w http.ResponseWriter, _ *http.Request) {
 	// Reset Items
