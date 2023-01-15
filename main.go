@@ -17,9 +17,12 @@ import (
 )
 
 const (
-	DB_USER     = "dbuser"         //Default Database user
-	DB_PASSWORD = "heslo"          // Default database password
-	DB_NAME     = "temperature_db" // default database name
+	// DbUser is the default database user
+	DbUser = "dbuser"
+	// DbPassword is the default database password
+	DbPassword = "heslo"
+	// DbName is the default database name
+	DbName = "temperature_db"
 )
 
 func main() {
@@ -76,7 +79,7 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Connect to the database
-	db, err := sql.Open("mysql", DB_USER+":"+DB_PASSWORD+"@/"+DB_NAME+"?parseTime=true")
+	db, err := sql.Open("mysql", DbUser+":"+DbPassword+"@/"+DbName+"?parseTime=true")
 	if err != nil {
 		log.Printf("There was problem with connection to databsae : %v", err)
 		http.Error(w, "Error connecting to database: "+err.Error(), http.StatusInternalServerError)
@@ -113,7 +116,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 	pressures := make([]opts.LineData, 0)
 	var times []time.Time
 	// Connect to the database
-	db, err := sql.Open("mysql", DB_USER+":"+DB_PASSWORD+"@/"+DB_NAME+"?parseTime=true")
+	db, err := sql.Open("mysql", DbUser+":"+DbPassword+"@/"+DbName+"?parseTime=true")
 	if err != nil {
 		http.Error(w, "Error connecting to database: "+err.Error(), http.StatusInternalServerError)
 		return
