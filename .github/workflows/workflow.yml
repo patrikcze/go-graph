@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+      - messatwork
       - main
       - korczis/*
       - patrikcze/*
