@@ -1,3 +1,7 @@
+// Package main is the entry point of the application.
+// It contains the main function that runs the application.
+// / default API will render chart
+// writedata will write data into MySQL Database
 package main
 
 import (
@@ -23,7 +27,7 @@ const (
 )
 */
 
-var dbServer string
+// var dbServer string
 var dbUser string
 var dbPassword string
 var dbName string
