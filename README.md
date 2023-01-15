@@ -4,6 +4,8 @@ Trying to mess around with GoLang, prepare simple APi which will collect data fr
 # Updated thx to kX !
 - updated makefile
 - added workflow
+- Updated workflow, using selfhosted runner
+- fixed error handling in main.go
 
 **THIS ALL HAS BEEN DONE WITH HELP OF OpenAI!**
 
