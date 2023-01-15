@@ -9,13 +9,20 @@ IMAGE_NAME=go-api-mysql
 CONTAINER_NAME=go-api-mysql
 REGISTRY=docker.io
 
+# MacOS or Linux
+ifeq ($(shell uname -s),Darwin)
+    CURL_CMD = curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`aarch64`"
+else
+    CURL_CMD = curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m`"
+endif
+
 # Dependency management
 deps:
 	$(GOGET) -u honnef.co/go/tools/cmd/staticcheck
 	$(GOGET) -u github.com/mgechev/revive
 	# $(GOGET) -u github.com/golangci/golangci-lint/cmd/golangci-lint
-	# curl -L "curl -SL https://github.com/docker/compose/releases/download/v2.15.1/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
-	# chmod +x /usr/local/bin/docker-compose
+	$(CURL_CMD) -o /usr/local/bin/docker-compose
+	chmod +x /usr/local/bin/docker-compose
 
 # Docker parameters
 IMAGE_NAME=go-api-mysql
