@@ -20,11 +20,11 @@ IMAGE_NAME=go-api-mysql
 CONTAINER_NAME=go-api-mysql
 
 # Build the binary
-build: deps
+build-binary: deps
 	$(GOBUILD) -o $(BINARY_NAME) -v
 
 # Build and run the container
-run:
+build-docker-image: build-binary
 	docker build -t $(IMAGE_NAME) .
 	docker run -d -p 80:8080 --name $(CONTAINER_NAME) $(IMAGE_NAME)
 
@@ -66,4 +66,4 @@ push:
 # Enable lint later
 # .PHONY: build run stop vet lint revive check clean
 
-.PHONY: build vet revive check clean
+.PHONY: build-binary vet revive check clean
