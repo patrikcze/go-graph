@@ -89,15 +89,18 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error writing data to database: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+	// Fixed error handling here (hopefully)
+	n, err := w.Write([]byte("Data written to database successfully"))
+	if n != 200 {
+		log.Println(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 
+	}
 	// Return a success response
 	w.WriteHeader(http.StatusOK)
 	log.Println("Data wuccessfully written to database.")
-	w.Write([]byte("Data written to database successfully"))
-	if err != nil {
-		http.Error(w, "Error writting data: "+err.Error(), http.StatusBadRequest)
-		return
-	}
+
 }
 
 // Render the chart
@@ -259,9 +262,10 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 				Smooth: true,
 			}),
 		)
-	line.Render(w)
-	if err != nil {
+	e := line.Render(w)
+	if e != nil {
 		http.Error(w, "Error rendering the chart : "+err.Error(), http.StatusInternalServerError)
 		log.Printf("Error in rendering the chart : %v", err)
+		return
 	}
 }
