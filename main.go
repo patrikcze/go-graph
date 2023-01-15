@@ -27,7 +27,10 @@ func main() {
 	*/
 	http.HandleFunc("/", renderGraph)
 	http.HandleFunc("/writedata", writeData)
-	http.ListenAndServe(":8080", nil)
+
+	//http.ListenAndServe(":8080", nil)
+	// Check error
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 func writeData(w http.ResponseWriter, r *http.Request) {
@@ -91,6 +94,10 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	log.Println("Data wuccessfully written to database.")
 	w.Write([]byte("Data written to database successfully"))
+	if err != nil {
+		http.Error(w, "Error writting data: "+err.Error(), http.StatusBadRequest)
+		return
+	}
 }
 
 // Render the chart
@@ -253,10 +260,8 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 			}),
 		)
 	line.Render(w)
-
-}
-
-// Test function to return time as string
-func formatTime(t time.Time) string {
-	return t.Format("15:04")
+	if err != nil {
+		http.Error(w, "Error rendering the chart : "+err.Error(), http.StatusInternalServerError)
+		log.Printf("Error in rendering the chart : %v", err)
+	}
 }
