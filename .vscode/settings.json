@@ -1,0 +1,5 @@
+{
+    "go.toolsEnvVars": {
+        "GOROOT": "/opt/homebrew/Cellar/go/1.19.5/libexec"
+    }
+}
