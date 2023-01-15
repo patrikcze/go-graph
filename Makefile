@@ -11,9 +11,9 @@ REGISTRY=docker.io
 
 # MacOS or Linux
 ifeq ($(shell uname -s),Darwin)
-    CURL_CMD = curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`aarch64`"
+    CURL_CMD = curl -L "https://github.com/docker/compose/releases/download/2.15.1/docker-compose-`uname -s`-aarch64"
 else
-    CURL_CMD = curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-`uname -s`-`uname -m`"
+    CURL_CMD = curl -L "https://github.com/docker/compose/releases/download/2.15.1/docker-compose-`uname -s`-`uname -m`"
 endif
 
 # Dependency management
