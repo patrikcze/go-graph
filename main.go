@@ -1,3 +1,5 @@
+// Package main is the entry point of the application.
+// It contains the main function that runs the application.
 package main
 
 import (
@@ -15,9 +17,9 @@ import (
 )
 
 const (
-	DB_USER     = "dbuser"
-	DB_PASSWORD = "heslo"
-	DB_NAME     = "temperature_db"
+	DB_USER     = "dbuser"         //Default Database user
+	DB_PASSWORD = "heslo"          // Default database password
+	DB_NAME     = "temperature_db" // default database name
 )
 
 func main() {
