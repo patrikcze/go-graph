@@ -14,8 +14,8 @@ deps:
 	$(GOGET) -u honnef.co/go/tools/cmd/staticcheck
 	$(GOGET) -u github.com/mgechev/revive
 	# $(GOGET) -u github.com/golangci/golangci-lint/cmd/golangci-lint
-	curl -L "curl -SL https://github.com/docker/compose/releases/download/v2.15.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-	chmod +x /usr/local/bin/docker-compose
+	# curl -L "curl -SL https://github.com/docker/compose/releases/download/v2.15.1/docker-compose-linux-x86_64" -o /usr/local/bin/docker-compose
+	# chmod +x /usr/local/bin/docker-compose
 
 # Docker parameters
 IMAGE_NAME=go-api-mysql
