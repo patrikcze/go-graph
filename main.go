@@ -40,7 +40,8 @@ func main() {
 	*/
 	http.HandleFunc("/", renderGraph)
 	http.HandleFunc("/writedata", writeData)
-	http.ListenAndServe(":8080", nil)
+	// Check error
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 // writeData handles HTTP requests to write data to the MySQL database.
@@ -280,9 +281,4 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 		)
 	line.Render(w)
 
-}
-
-// Test function to return time as string
-func formatTime(t time.Time) string {
-	return t.Format("15:04")
 }
