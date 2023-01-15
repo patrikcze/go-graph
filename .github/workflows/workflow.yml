@@ -1,0 +1,38 @@
+name: Go Vet
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+    jobs:
+      if: github.event.pull_request.head.repo.fork == true
+
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+jobs:
+  vet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '15.x'
+
+      - name: Run go vet, lint, and revive
+        run: make check `git diff --name-only origin/main`
+
+      - name: Build and push the Docker image
+        run: |
+          echo $(DOCKER_PASSWORD) | docker login --username $(DOCKER_USERNAME) --password-stdin
+          make build push
