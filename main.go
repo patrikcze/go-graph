@@ -173,16 +173,16 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 // to generate the chart.
 // It takes no parameters and returns a rendered chart as an HTTP response.
 // Render the chart (12.1.2023 - tpc connection to MySQL using "db" name of container.)
-func renderGraph(w http.ResponseWriter, _ *http.Request, config Config) {
+func renderGraph(w http.ResponseWriter, _ *http.Request, config Config)  {
 	// Reset Items
 	temperatures := make([]opts.LineData, 0)
 	humidities := make([]opts.LineData, 0)
 	pressures := make([]opts.LineData, 0)
+	// Setup Time
 	var times []time.Time
+
 	// Connect to the database
-
 	db, err := sql.Open("mysql", dbUser+":"+dbPassword+"@tcp(db)/"+dbName+"?parseTime=true")
-
 	if err != nil {
 		http.Error(w, "Error connecting to database: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -271,6 +271,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request, config Config) {
 	if e != nil {
 		http.Error(w, "Error rendering the chart : "+err.Error(), http.StatusInternalServerError)
 		log.Printf("Error in rendering the chart : %v", e)
-		return
+		
 	}
+
 }
