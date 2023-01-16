@@ -21,8 +21,8 @@ deps:
 	$(GOGET) -u honnef.co/go/tools/cmd/staticcheck
 	$(GOGET) -u github.com/mgechev/revive
 	# $(GOGET) -u github.com/golangci/golangci-lint/cmd/golangci-lint
-	sudo $(CURL_CMD) -o /usr/local/bin/docker-compose
-	sudo chmod +x /usr/local/bin/docker-compose
+	# sudo $(CURL_CMD) -o /usr/local/bin/docker-compose
+	# sudo chmod +x /usr/local/bin/docker-compose
 
 # Docker parameters
 IMAGE_NAME=go-api-mysql
@@ -65,7 +65,7 @@ clean:
 # Build the binary and create the Docker image
 build: deps
 	$(GOBUILD) -o $(BINARY_NAME) -v
-	docker-compose build -t $(IMAGE_NAME) .
+	docker-compose build
 
 # Push the image to the Docker registry
 push:

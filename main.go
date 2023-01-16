@@ -17,7 +17,6 @@ import (
 
 	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/opts"
-	"github.com/go-echarts/go-echarts/v2/types"
 )
 
 /*
@@ -33,6 +32,7 @@ var dbUser string
 var dbPassword string
 var dbName string
 
+// Config holds the configuration options for the chart.
 // config.json structure
 // used to configure look and feel of the chart
 type Config struct {
@@ -44,7 +44,7 @@ type Config struct {
 
 func main() {
 
-	// Read the config.json
+	// Read and parse the config.json
 	config := Config{}
 	file, err := os.Open("config.json")
 	if err != nil {
@@ -69,7 +69,9 @@ func main() {
 	r.HandleFunc("/graph", chartHandler)
 	http.ListenAndServe(":8080", r)
 	*/
-	http.HandleFunc("/", renderGraph)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		renderGraph(w, r, config)
+	})
 	http.HandleFunc("/writedata", writeData)
 	// Check error
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -159,7 +161,7 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 // to generate the chart.
 // It takes no parameters and returns a rendered chart as an HTTP response.
 // Render the chart (12.1.2023 - tpc connection to MySQL using "db" name of container.)
-func renderGraph(w http.ResponseWriter, _ *http.Request) {
+func renderGraph(w http.ResponseWriter, _ *http.Request, config Config) {
 	// Reset Items
 	temperatures := make([]opts.LineData, 0)
 	humidities := make([]opts.LineData, 0)
@@ -225,23 +227,11 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 	// set some global options like Title/Legend/ToolTip or anything else
 	line.SetGlobalOptions(
 		// Initial option of Chart
-		charts.WithInitializationOpts(opts.Initialization{
-			Theme:     types.ThemeWesteros,
-			PageTitle: "Grafík",
-			Height:    "768px",
-			Width:     "1024px",
-		}),
+		charts.WithInitializationOpts(config.Initialization),
 		// Name of the chart and subtitle
-		charts.WithTitleOpts(opts.Title{
-			Title:    "Graf Teplot (ESP32 & BME280)",
-			Subtitle: "Pokusí se vykreslit data z databáze. Teploty, Vlhkosti a tlaky.",
-		}),
+		charts.WithTitleOpts(config.Title),
 		// Shows tool tip on click
-		charts.WithTooltipOpts(opts.Tooltip{
-			Show:      true,
-			Trigger:   "axis",
-			TriggerOn: "click",
-		}),
+		charts.WithTooltipOpts(config.Tooltip),
 		// Will try to render Legend (you can click on each series)
 		charts.WithLegendOpts(opts.Legend{
 			Show:   true,

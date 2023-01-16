@@ -38,6 +38,7 @@ ENV MYSQL_PASSWORD=heslo
 RUN mkdir -p /app
 # Copy the compiled Go binary and create the app directory
 COPY --from=builder /app/main /app/main
+COPY --from=builder /app/config.json /app/config.json
 # COPY --from=builder /app/create_table.sql /app/create_table.sql
 RUN chmod +x /app/main
 
