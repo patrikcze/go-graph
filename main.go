@@ -21,12 +21,9 @@ import (
 
 /*
 const (
-	// DbUser is the default database user
-	DbUser = "dbuser"
-	// DbPassword is the default database password
-	DbPassword = "heslo"
-	// DbName is the default database name
-	DbName = "temperature_db"
+	DB_USER     = "dbuser"
+	DB_PASSWORD = "heslo"
+	DB_NAME     = "temperature_db"
 )
 */
 
@@ -134,7 +131,6 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 
 	// Connect to the database
 	db, err := sql.Open("mysql", dbUser+":"+dbPassword+"@tcp(db)/"+dbName+"?parseTime=true")
-
 	if err != nil {
 		log.Printf("There was problem with connection to databsae : %v", err)
 		http.Error(w, "Error connecting to database: "+err.Error(), http.StatusInternalServerError)
@@ -149,12 +145,6 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error writing data to database: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	// Fixed error handling here (hopefully)
-	n, err := w.Write([]byte("Data written to database successfully"))
-	if n != 200 {
-		log.Println(err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
 
 	// Fixed error handling here (hopefully)
 	n, err := w.Write([]byte("Data written to database successfully"))
@@ -162,6 +152,7 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
+
 	}
 	// Return a success response
 	w.WriteHeader(http.StatusOK)
@@ -173,14 +164,12 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 // to generate the chart.
 // It takes no parameters and returns a rendered chart as an HTTP response.
 // Render the chart (12.1.2023 - tpc connection to MySQL using "db" name of container.)
-func renderGraph(w http.ResponseWriter, _ *http.Request, config Config)  {
+func renderGraph(w http.ResponseWriter, _ *http.Request, config Config) {
 	// Reset Items
 	temperatures := make([]opts.LineData, 0)
 	humidities := make([]opts.LineData, 0)
 	pressures := make([]opts.LineData, 0)
-	// Setup Time
 	var times []time.Time
-
 	// Connect to the database
 	db, err := sql.Open("mysql", dbUser+":"+dbPassword+"@tcp(db)/"+dbName+"?parseTime=true")
 	if err != nil {
@@ -271,7 +260,7 @@ func renderGraph(w http.ResponseWriter, _ *http.Request, config Config)  {
 	if e != nil {
 		http.Error(w, "Error rendering the chart : "+err.Error(), http.StatusInternalServerError)
 		log.Printf("Error in rendering the chart : %v", e)
-		
+		return
 	}
 
 }
