@@ -67,6 +67,7 @@ build: deps
 	$(GOBUILD) -o $(BINARY_NAME) -v
 	docker-compose build
 
+
 # Push the image to the Docker registry
 push:
 	docker tag $(IMAGE_NAME) $(REGISTRY)/$(IMAGE_NAME)
@@ -76,3 +77,4 @@ push:
 # .PHONY: build run stop vet lint revive check clean
 
 .PHONY: build-docker-image vet revive check clean
+

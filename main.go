@@ -21,9 +21,12 @@ import (
 
 /*
 const (
-	DB_USER     = "dbuser"
-	DB_PASSWORD = "heslo"
-	DB_NAME     = "temperature_db"
+	// DbUser is the default database user
+	DbUser = "dbuser"
+	// DbPassword is the default database password
+	DbPassword = "heslo"
+	// DbName is the default database name
+	DbName = "temperature_db"
 )
 */
 
@@ -131,6 +134,7 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 
 	// Connect to the database
 	db, err := sql.Open("mysql", dbUser+":"+dbPassword+"@tcp(db)/"+dbName+"?parseTime=true")
+
 	if err != nil {
 		log.Printf("There was problem with connection to databsae : %v", err)
 		http.Error(w, "Error connecting to database: "+err.Error(), http.StatusInternalServerError)
@@ -145,7 +149,6 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error writing data to database: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 	// Fixed error handling here (hopefully)
 	n, err := w.Write([]byte("Data written to database successfully"))
 	if n != 200 {
@@ -153,6 +156,12 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 
+	// Fixed error handling here (hopefully)
+	n, err := w.Write([]byte("Data written to database successfully"))
+	if n != 200 {
+		log.Println(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
 	// Return a success response
 	w.WriteHeader(http.StatusOK)
@@ -171,7 +180,9 @@ func renderGraph(w http.ResponseWriter, _ *http.Request, config Config) {
 	pressures := make([]opts.LineData, 0)
 	var times []time.Time
 	// Connect to the database
+
 	db, err := sql.Open("mysql", dbUser+":"+dbPassword+"@tcp(db)/"+dbName+"?parseTime=true")
+
 	if err != nil {
 		http.Error(w, "Error connecting to database: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -262,5 +273,4 @@ func renderGraph(w http.ResponseWriter, _ *http.Request, config Config) {
 		log.Printf("Error in rendering the chart : %v", e)
 		return
 	}
-
 }
