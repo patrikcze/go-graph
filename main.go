@@ -6,6 +6,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"log"
 	"net/http"
 	"os"
@@ -32,10 +33,36 @@ var dbUser string
 var dbPassword string
 var dbName string
 
+// config.json structure
+// used to configure look and feel of the chart
+type Config struct {
+	Initialization opts.Initialization `json:"initialization"`
+	Title          opts.Title          `json:"title"`
+	Tooltip        opts.Tooltip        `json:"tooltip"`
+	Legend         opts.Legend         `json:"legend"`
+}
+
 func main() {
 
+	// Read the config.json
+	config := Config{}
+	file, err := os.Open("config.json")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	jsonParser := json.NewDecoder(file)
+	if err = jsonParser.Decode(&config); err != nil {
+		panic(err)
+	}
+
+	// Read variables from ENV
+	// dbUser is default MySQL User name
 	dbUser = os.Getenv("MYSQL_USER")
+	// dbPassword default MySQL Password
 	dbPassword = os.Getenv("MYSQL_PASSWORD")
+	// dbName is Default MySQL Database name
 	dbName = os.Getenv("MYSQL_DATABASE")
 
 	/*r := mux.NewRouter()
