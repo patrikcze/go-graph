@@ -9,11 +9,20 @@ IMAGE_NAME=go-api-mysql
 CONTAINER_NAME=go-api-mysql
 REGISTRY=docker.io
 
+# MacOS or Linux
+ifeq ($(shell uname -s),Darwin)
+    CURL_CMD = curl -L "https://github.com/docker/compose/releases/download/2.15.1/docker-compose-`uname -s`-aarch64"
+else
+    CURL_CMD = curl -L "https://github.com/docker/compose/releases/download/2.15.1/docker-compose-`uname -s`-`uname -m`"
+endif
+
 # Dependency management
 deps:
 	$(GOGET) -u honnef.co/go/tools/cmd/staticcheck
 	$(GOGET) -u github.com/mgechev/revive
 	# $(GOGET) -u github.com/golangci/golangci-lint/cmd/golangci-lint
+	# sudo $(CURL_CMD) -o /usr/local/bin/docker-compose
+	# sudo chmod +x /usr/local/bin/docker-compose
 
 # Docker parameters
 IMAGE_NAME=go-api-mysql
@@ -25,13 +34,13 @@ build-binary: deps
 
 # Build and run the container
 build-docker-image: build-binary
-	docker build -t $(IMAGE_NAME) .
-	docker run -d -p 80:8080 --name $(CONTAINER_NAME) $(IMAGE_NAME)
+	docker-compose build -t $(IMAGE_NAME) .
+	docker-compose run -d -p 80:8080 --name $(CONTAINER_NAME) $(IMAGE_NAME)
 
 # Stop and remove the container
 stop:
-	docker stop $(CONTAINER_NAME)
-	docker rm $(CONTAINER_NAME)
+	docker-compose down $(CONTAINER_NAME)
+	docker-compose rm $(CONTAINER_NAME)
 
 # Run go vet
 vet:
@@ -56,7 +65,8 @@ clean:
 # Build the binary and create the Docker image
 build: deps
 	$(GOBUILD) -o $(BINARY_NAME) -v
-	docker build -t $(IMAGE_NAME) .
+	docker-compose build
+
 
 # Push the image to the Docker registry
 push:
@@ -66,4 +76,5 @@ push:
 # Enable lint later
 # .PHONY: build run stop vet lint revive check clean
 
-.PHONY: build-binary vet revive check clean
+.PHONY: build-docker-image vet revive check clean
+

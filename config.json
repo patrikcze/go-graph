@@ -1,0 +1,60 @@
+{
+    "initialization": {
+        "theme": "westeros",
+        "pageTitle": "Grafík",
+        "height": "768px",
+        "width": "1024px"
+    },
+    "title": {
+        "title": "Graf Teplot (ESP32 & BME280)",
+        "subtitle": "Pokusí se vykreslit data z databáze. Teploty, Vlhkosti a tlaky."
+    },
+    "tooltip": {
+        "show": true,
+        "trigger": "axis",
+        "triggerOn": "click"
+    },
+    "legend": {
+        "show": true,
+        "bottom": "50%",
+        "align": "right",
+        "left": "90%"
+    },
+    "dataZoom": {
+        "type": "slider",
+        "start": 0,
+        "end": 100
+    },
+    "toolbox": {
+        "show": true,
+        "feature": {
+            "saveAsImage": {
+                "show": true,
+                "type": "png",
+                "name": "Heyrovskeho5",
+                "title": "Uložit"
+            },
+            "dataView": {
+                "show": true,
+                "title": "DataView"
+            },
+            "dataZoom": {
+                "show": true
+            },
+            "restore": {
+                "show": true,
+                "title": "Refresh"
+            }
+        },
+        "top": ""
+    },
+    "xAxis": {
+        "name": "Datum a čas",
+        "show": true,
+        "axisLabel": {
+            "show": true,
+            "inside": false,
+            "margin": 0
+        }
+    }
+}

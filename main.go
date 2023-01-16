@@ -1,11 +1,15 @@
 // Package main is the entry point of the application.
 // It contains the main function that runs the application.
+// / default API will render chart
+// writedata will write data into MySQL Database
 package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -13,9 +17,9 @@ import (
 
 	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/go-echarts/go-echarts/v2/opts"
-	"github.com/go-echarts/go-echarts/v2/types"
 )
 
+/*
 const (
 	// DbUser is the default database user
 	DbUser = "dbuser"
@@ -24,20 +28,70 @@ const (
 	// DbName is the default database name
 	DbName = "temperature_db"
 )
+*/
+
+// var dbServer string
+var dbUser string
+var dbPassword string
+var dbName string
+
+// Config holds the configuration options for the chart.
+// config.json structure
+// used to configure look and feel of the chart
+type Config struct {
+	Initialization opts.Initialization `json:"initialization"`
+	Title          opts.Title          `json:"title"`
+	Tooltip        opts.Tooltip        `json:"tooltip"`
+	Legend         opts.Legend         `json:"legend"`
+	DataZoom       opts.DataZoom       `json:"dataZoom"`
+	Toolbox        opts.Toolbox        `json:"toolbox"`
+	XAxis          opts.XAxis          `json:"xAxis"`
+}
 
 func main() {
+
+	// Read and parse the config.json
+	config := Config{}
+	file, err := os.Open("config.json")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	jsonParser := json.NewDecoder(file)
+	if err = jsonParser.Decode(&config); err != nil {
+		panic(err)
+	}
+
+	// Read variables from ENV
+	// dbUser is default MySQL User name
+	dbUser = os.Getenv("MYSQL_USER")
+	// dbPassword default MySQL Password
+	dbPassword = os.Getenv("MYSQL_PASSWORD")
+	// dbName is Default MySQL Database name
+	dbName = os.Getenv("MYSQL_DATABASE")
+
 	/*r := mux.NewRouter()
 	r.HandleFunc("/graph", chartHandler)
 	http.ListenAndServe(":8080", r)
 	*/
-	http.HandleFunc("/", renderGraph)
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		renderGraph(w, r, config)
+	})
 	http.HandleFunc("/writedata", writeData)
-
-	//http.ListenAndServe(":8080", nil)
 	// Check error
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
+// writeData handles HTTP requests to write data to the MySQL database.
+// It expects the following form values in the request body:
+// - "time": a string in the format "2006-01-02 15:04:05"
+// - "temperature": a float value representing the temperature
+// - "humidity": a float value representing the humidity
+// - "pressure": a float value representing the pressure
+// If the form values are not in the expected format or there is a problem connecting to the database,
+// it will return an appropriate error status code and message.
+// Update (12.1.2023 - Using TCP connection for MySQL using "db" name of container.)
 func writeData(w http.ResponseWriter, r *http.Request) {
 	// Parse the form data
 	err := r.ParseForm()
@@ -79,7 +133,8 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Connect to the database
-	db, err := sql.Open("mysql", DbUser+":"+DbPassword+"@/"+DbName+"?parseTime=true")
+	db, err := sql.Open("mysql", dbUser+":"+dbPassword+"@tcp(db)/"+dbName+"?parseTime=true")
+
 	if err != nil {
 		log.Printf("There was problem with connection to databsae : %v", err)
 		http.Error(w, "Error connecting to database: "+err.Error(), http.StatusInternalServerError)
@@ -101,22 +156,33 @@ func writeData(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 
+	// Fixed error handling here (hopefully)
+	n, err := w.Write([]byte("Data written to database successfully"))
+	if n != 200 {
+		log.Println(err)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
 	}
 	// Return a success response
 	w.WriteHeader(http.StatusOK)
 	log.Println("Data wuccessfully written to database.")
-
 }
 
-// Render the chart
-func renderGraph(w http.ResponseWriter, _ *http.Request) {
+// renderGraph handles HTTP requests to render a chart of the data from the MySQL database.
+// It queries the data from the "data" table in the database and pass it to the go-echarts package
+// to generate the chart.
+// It takes no parameters and returns a rendered chart as an HTTP response.
+// Render the chart (12.1.2023 - tpc connection to MySQL using "db" name of container.)
+func renderGraph(w http.ResponseWriter, _ *http.Request, config Config) {
 	// Reset Items
 	temperatures := make([]opts.LineData, 0)
 	humidities := make([]opts.LineData, 0)
 	pressures := make([]opts.LineData, 0)
 	var times []time.Time
 	// Connect to the database
-	db, err := sql.Open("mysql", DbUser+":"+DbPassword+"@/"+DbName+"?parseTime=true")
+
+	db, err := sql.Open("mysql", dbUser+":"+dbPassword+"@tcp(db)/"+dbName+"?parseTime=true")
+
 	if err != nil {
 		http.Error(w, "Error connecting to database: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -175,86 +241,19 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 	// set some global options like Title/Legend/ToolTip or anything else
 	line.SetGlobalOptions(
 		// Initial option of Chart
-		charts.WithInitializationOpts(opts.Initialization{
-			Theme:     types.ThemeWesteros,
-			PageTitle: "Grafík",
-			Height:    "768px",
-			Width:     "1024px",
-		}),
+		charts.WithInitializationOpts(config.Initialization),
 		// Name of the chart and subtitle
-		charts.WithTitleOpts(opts.Title{
-			Title:    "Graf Teplot (ESP32 & BME280)",
-			Subtitle: "Pokusí se vykreslit data z databáze. Teploty, Vlhkosti a tlaky.",
-		}),
+		charts.WithTitleOpts(config.Title),
 		// Shows tool tip on click
-		charts.WithTooltipOpts(opts.Tooltip{
-			Show:      true,
-			Trigger:   "axis",
-			TriggerOn: "click",
-		}),
+		charts.WithTooltipOpts(config.Tooltip),
 		// Will try to render Legend (you can click on each series)
-		charts.WithLegendOpts(opts.Legend{
-			Show:   true,
-			Bottom: "50%",
-			Align:  "right",
-			Left:   "90%",
-			Right:  "10%",
-			Top:    "50%",
-			Orient: "vertical",
-		}),
+		charts.WithLegendOpts(config.Legend),
 		// This will setup DataZoom Slider in the chart
-		charts.WithDataZoomOpts(opts.DataZoom{
-			Type:  "slider",
-			Start: 0,
-			End:   100,
-		}),
+		charts.WithDataZoomOpts(config.DataZoom),
 		// This will add Toolbox to top right corner and allows to export to PNG or Show dataset.
-		charts.WithToolboxOpts(opts.Toolbox{
-			Show: true,
-			Feature: &opts.ToolBoxFeature{
-				SaveAsImage: &opts.ToolBoxFeatureSaveAsImage{
-					Show:  true,
-					Type:  "png",
-					Name:  "Heyrovskeho5",
-					Title: "Uložit",
-				},
-				DataView: &opts.ToolBoxFeatureDataView{
-					Show:  true,
-					Title: "DataView",
-				},
-				DataZoom: &opts.ToolBoxFeatureDataZoom{
-					Show: true,
-				},
-				Restore: &opts.ToolBoxFeatureRestore{
-					Show:  true,
-					Title: "Refresh",
-				},
-			},
-			Top: "",
-		}),
+		charts.WithToolboxOpts(config.Toolbox),
 		// Some basic options for X Axis
-		charts.WithXAxisOpts(opts.XAxis{
-			Name: "Datum a čas",
-			Show: true,
-			//Max:  "dataMax",
-			//Type: "category",
-			//Data: times,
-			//Width: "50%",
-			//Type: "time",
-			// Options for X Axis Labels (GRID is not supported in Go-ECharts package!!!)
-			AxisLabel: &opts.AxisLabel{
-				Show: true,
-				//Interval:  "10",
-				Inside: false,
-				//Rotate: 90,
-				Margin: 0,
-				//Formatter: opts.FuncOpts(fn),
-				//Formatter: "{HH}:{mm}",
-				Align: "",
-				//VerticalAlign: "right",
-				//LineHeight: "250",
-			}},
-		),
+		charts.WithXAxisOpts(config.XAxis),
 	)
 
 	// Puts data into instance and setup some further options to each serie.
@@ -267,10 +266,11 @@ func renderGraph(w http.ResponseWriter, _ *http.Request) {
 				Smooth: true,
 			}),
 		)
+	// render if no issue
 	e := line.Render(w)
 	if e != nil {
 		http.Error(w, "Error rendering the chart : "+err.Error(), http.StatusInternalServerError)
-		log.Printf("Error in rendering the chart : %v", err)
+		log.Printf("Error in rendering the chart : %v", e)
 		return
 	}
 }

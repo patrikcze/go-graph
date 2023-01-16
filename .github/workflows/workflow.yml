@@ -71,3 +71,4 @@ jobs:
 #        run: |
 #          echo $(DOCKER_PASSWORD) | docker login --username $(DOCKER_USERNAME) --password-stdin
 #          make build push
+#          make build push

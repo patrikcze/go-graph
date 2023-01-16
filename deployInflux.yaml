@@ -11,6 +11,7 @@ data:
       bind-address = ":8086"
       # Determines whether user authentication is enabled for the HTTP endpoint.
       auth-enabled = true
+      # this is just an example. Not completed!
 ---
 apiVersion: v1
 kind: Service
