@@ -1,0 +1,23 @@
+{
+    "initialization": {
+        "theme": "westeros",
+        "pageTitle": "Grafík",
+        "height": "768px",
+        "width": "1024px"
+    },
+    "title": {
+        "title": "Graf Teplot (ESP32 & BME280)",
+        "subtitle": "Pokusí se vykreslit data z databáze. Teploty, Vlhkosti a tlaky."
+    },
+    "tooltip": {
+        "show": true,
+        "trigger": "axis",
+        "triggerOn": "click"
+    },
+    "legend": {
+        "show": true,
+        "bottom": "50%",
+        "align": "right",
+        "left": "90%"
+    }
+}
