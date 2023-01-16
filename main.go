@@ -40,6 +40,9 @@ type Config struct {
 	Title          opts.Title          `json:"title"`
 	Tooltip        opts.Tooltip        `json:"tooltip"`
 	Legend         opts.Legend         `json:"legend"`
+	DataZoom       opts.DataZoom       `json:"dataZoom"`
+	Toolbox        opts.Toolbox        `json:"toolbox"`
+	XAxis          opts.XAxis          `json:"xAxis"`
 }
 
 func main() {
@@ -233,68 +236,13 @@ func renderGraph(w http.ResponseWriter, _ *http.Request, config Config) {
 		// Shows tool tip on click
 		charts.WithTooltipOpts(config.Tooltip),
 		// Will try to render Legend (you can click on each series)
-		charts.WithLegendOpts(opts.Legend{
-			Show:   true,
-			Bottom: "50%",
-			Align:  "right",
-			Left:   "90%",
-			Right:  "10%",
-			Top:    "50%",
-			Orient: "vertical",
-		}),
+		charts.WithLegendOpts(config.Legend),
 		// This will setup DataZoom Slider in the chart
-		charts.WithDataZoomOpts(opts.DataZoom{
-			Type:  "slider",
-			Start: 0,
-			End:   100,
-		}),
+		charts.WithDataZoomOpts(config.DataZoom),
 		// This will add Toolbox to top right corner and allows to export to PNG or Show dataset.
-		charts.WithToolboxOpts(opts.Toolbox{
-			Show: true,
-			Feature: &opts.ToolBoxFeature{
-				SaveAsImage: &opts.ToolBoxFeatureSaveAsImage{
-					Show:  true,
-					Type:  "png",
-					Name:  "Heyrovskeho5",
-					Title: "Uložit",
-				},
-				DataView: &opts.ToolBoxFeatureDataView{
-					Show:  true,
-					Title: "DataView",
-				},
-				DataZoom: &opts.ToolBoxFeatureDataZoom{
-					Show: true,
-				},
-				Restore: &opts.ToolBoxFeatureRestore{
-					Show:  true,
-					Title: "Refresh",
-				},
-			},
-			Top: "",
-		}),
+		charts.WithToolboxOpts(config.Toolbox),
 		// Some basic options for X Axis
-		charts.WithXAxisOpts(opts.XAxis{
-			Name: "Datum a čas",
-			Show: true,
-			//Max:  "dataMax",
-			//Type: "category",
-			//Data: times,
-			//Width: "50%",
-			//Type: "time",
-			// Options for X Axis Labels (GRID is not supported in Go-ECharts package!!!)
-			AxisLabel: &opts.AxisLabel{
-				Show: true,
-				//Interval:  "10",
-				Inside: false,
-				//Rotate: 90,
-				Margin: 0,
-				//Formatter: opts.FuncOpts(fn),
-				//Formatter: "{HH}:{mm}",
-				Align: "",
-				//VerticalAlign: "right",
-				//LineHeight: "250",
-			}},
-		),
+		charts.WithXAxisOpts(config.XAxis),
 	)
 
 	// Puts data into instance and setup some further options to each serie.
