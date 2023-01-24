@@ -7,7 +7,6 @@ require (
 	github.com/go-sql-driver/mysql v1.7.0
 	gobot.io/x/gobot v1.16.0
 )
-
 require (
 	github.com/JuulLabs-OSS/cbgo v0.0.2 // indirect
 	github.com/fatih/structs v1.1.0 // indirect

@@ -3,6 +3,13 @@
 # PoC 
 Trying to mess around with GoLang, prepare simple APi which will collect data from ESP32 + BME280 Module, uploads data to MySQL Database and will draw a line chart.
 
+# Updated thx to kX !
+- updated makefile
+- added workflow
+- Updated workflow, using selfhosted runner
+- fixed error handling in main.go
+- Updated Makefile there were multiple rules in Makefile with the same target name 'build', and the second one is overriding the first one.
+- Added comments / used CamelCase for Consts ...
 
 **THIS ALL HAS BEEN DONE WITH HELP OF OpenAI!**
 
