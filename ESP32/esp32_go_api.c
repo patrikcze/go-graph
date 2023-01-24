@@ -4,6 +4,12 @@
 #include <WiFiUdp.h>
 #include <time.h>
 
+// Added BLE Library - just for testing purposes.
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLEUtils.h>
+
+
 #include <WebServer.h>
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
@@ -16,6 +22,14 @@
 #define WIFI_PASSWORD "YOUR-PASSWORD"
 #define BME280_ADDRESS 0x76
 #define LED_PIN 2
+
+// EXAMPLE UUID
+// A UUID (Universally Unique Identifier) is a 128-bit value that is used to uniquely identify a service, characteristic, or descriptor in a BLE system. 
+// The UUID is typically represented as a string of hexadecimal digits, with or without hyphens, for example, "6E400001-B5A3-F393-E0A9-E50E24DCCA9E".
+// e4335459-28db-4247-9f04-eef3b402eb18
+// da5b6a70-cfeb-44a6-9d72-787b63a5d604
+// d43f2484-75d4-4c9c-9d45-215ede6a0cc4
+// f0b7e7d6-e404-4f9e-8282-ac161dd1651e
 
 
 // Setup Time Server 
@@ -46,7 +60,38 @@ WiFiUDP udp;
  
 // Declare variables for storing temperature, humidity, and pressure data
 float temperature, humidity, pressure;
- 
+
+// Create a BLE Server
+BLEServer *pServer = BLEDevice::createServer();
+
+// Create a BLE Service
+BLEService *pService = pServer->createService("YOUR-SERVICE-UUID");
+
+// Create a BLE Characteristic for temperature
+BLECharacteristic *pTemperatureCharacteristic = pService->createCharacteristic(
+  "YOUR-TEMPERATURE-UUID",
+  BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY
+);
+
+// Create a BLE Characteristic for humidity
+BLECharacteristic *pHumidityCharacteristic = pService->createCharacteristic(
+  "YOUR-HUMIDITY-UUID",
+  BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY
+);
+
+// Create a BLE Characteristic for pressure
+BLECharacteristic *pPressureCharacteristic = pService->createCharacteristic(
+  "YOUR-PRESSURE-UUID",
+  BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY
+);
+
+// Start the service
+pService->start();
+
+// Start advertising
+pServer->getAdvertising()->start();
+
+
 void setup() {
   // Serial Port
   Serial.begin(9600);
@@ -93,6 +138,19 @@ void setup() {
     Serial.println(buffer);
   }
 
+  // Set the initial value for the temperature characteristic
+  pTemperatureCharacteristic->setValue(0);
+  pTemperatureCharacteristic->notify();
+
+  // Set the initial value for the humidity characteristic
+  pHumidityCharacteristic->setValue(0);
+  pHumidityCharacteristic->notify();
+
+  // Set the initial value for the pressure characteristic
+  pPressureCharacteristic->setValue(0);
+  pPressureCharacteristic->notify();
+
+
 }
 
 void loop() {
@@ -133,6 +191,18 @@ void loop() {
   // Send the data to the GoLang API
   sendDataToAPI(temperature, humidity, seaLevelPressure);
  
+  // Set the value of the temperature characteristic
+  pTemperatureCharacteristic->setValue(temperature);
+  pTemperatureCharacteristic->notify();
+
+  // Set the value of the humidity characteristic
+  pHumidityCharacteristic->setValue(humidity);
+  pHumidityCharacteristic->notify();
+
+  // Set the value of the pressure characteristic
+  pPressureCharacteristic->setValue(seaLevelPressure);
+  pPressureCharacteristic->notify();
+
   // Wait for a certain amount of time before collecting new data
   delay(60000); // Collect new data every 60 seconds
 }
