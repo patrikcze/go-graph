@@ -24,6 +24,8 @@
 #define LED_PIN 2
 
 // EXAMPLE UUID
+// A UUID (Universally Unique Identifier) is a 128-bit value that is used to uniquely identify a service, characteristic, or descriptor in a BLE system. 
+// The UUID is typically represented as a string of hexadecimal digits, with or without hyphens, for example, "6E400001-B5A3-F393-E0A9-E50E24DCCA9E".
 // e4335459-28db-4247-9f04-eef3b402eb18
 // da5b6a70-cfeb-44a6-9d72-787b63a5d604
 // d43f2484-75d4-4c9c-9d45-215ede6a0cc4
