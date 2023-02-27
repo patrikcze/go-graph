@@ -9,6 +9,11 @@ Trying to mess around with GoLang, prepare simple APi which will collect data fr
 Let's see how far we can go. :-)
 I'm messing with this all the time, so appologize for inconsistency.
 
+# Update 27.2.2023
+
+- Trying to review and test on Hardware again. 
+- Fixing Problems with runner on Github
+
 # Updates 12.1.2023
 
 - Created docker-compose.yml to use `multi-container` deployment.
