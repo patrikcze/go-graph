@@ -40,3 +40,7 @@ docker-compose.*
 # IntelliJ files
 .idea/
 *.iml
+
+
+.go-api-mysql
+go-api-mysql
