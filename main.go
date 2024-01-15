@@ -74,6 +74,7 @@ func main() {
 	*/
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		renderGraph(w, r, config)
+		log.Printf("%s %s %s\n", r.RemoteAddr, r.Method, r.URL)
 	})
 	http.HandleFunc("/writedata", writeData)
 	// Check error
